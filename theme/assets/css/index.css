@@ -1,0 +1,231 @@
+/*
+ * Think Store Auth 权限总览主题
+ * 复用 layui 的布局、卡片、表格与表单组件，这里只补充少量页面级样式。
+ */
+
+:root {
+    --store-auth-brand: #16baaa;
+    --store-auth-brand-soft: #e6f8f5;
+    --store-auth-ink: #1f2d2c;
+    --store-auth-muted: #7a9291;
+    --store-auth-line: #e6efed;
+    --store-auth-bg: #f4f8f7;
+}
+
+.store-auth-page {
+    color: var(--store-auth-ink);
+    background: var(--store-auth-bg);
+}
+
+.store-auth-page code {
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #0f5c56;
+    background: var(--store-auth-brand-soft);
+    font-family: "Cascadia Code", Consolas, Monaco, monospace;
+    font-size: 12px;
+}
+
+.store-auth-page .layui-header {
+    background: #20222a;
+}
+
+.store-auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 200px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.store-auth-logo .layui-icon {
+    color: var(--store-auth-brand);
+    font-size: 20px;
+}
+
+.store-auth-main {
+    padding: 20px 24px 0;
+}
+
+.store-auth-main .layui-card {
+    margin-bottom: 15px;
+    border: 1px solid var(--store-auth-line);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(31, 45, 44, 0.03);
+}
+
+.store-auth-main .layui-card-header {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.store-auth-hint {
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: 4px;
+    color: var(--store-auth-muted);
+    background: #f2f6f5;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.store-auth-hero {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fbf9 100%);
+}
+
+.store-auth-eyebrow {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--store-auth-brand);
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.store-auth-title {
+    margin: 0 0 8px;
+    color: var(--store-auth-ink);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.store-auth-desc {
+    max-width: 760px;
+    margin: 0;
+    color: var(--store-auth-muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.store-auth-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.store-auth-stats {
+    margin-bottom: 15px;
+}
+
+.store-auth-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    padding: 18px 20px;
+    border: 1px solid var(--store-auth-line);
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.store-auth-stat__num {
+    color: var(--store-auth-brand);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.store-auth-stat__label {
+    color: var(--store-auth-muted);
+    font-size: 13px;
+}
+
+.store-auth-uid {
+    width: 200px;
+}
+
+.store-auth-submit {
+    width: auto;
+}
+
+.store-auth-table-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 10px;
+    color: var(--store-auth-ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.store-auth-table-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--store-auth-line);
+    border-radius: 8px;
+    background: #fbfdfd;
+}
+
+.store-auth-table-item code {
+    align-self: flex-start;
+}
+
+.store-auth-table-item strong {
+    font-size: 14px;
+}
+
+.store-auth-table-item span {
+    color: var(--store-auth-muted);
+    font-size: 13px;
+}
+
+.store-auth-value {
+    font-family: "Cascadia Code", Consolas, Monaco, monospace;
+    font-size: 13px;
+}
+
+.store-auth-tip {
+    margin: 12px 0 0;
+    color: var(--store-auth-muted);
+    font-size: 13px;
+}
+
+#store-auth-query,
+#store-auth-config,
+#store-auth-tables,
+#store-auth-routes,
+#store-auth-meta {
+    scroll-margin-top: 80px;
+}
+
+.store-auth-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--store-auth-muted);
+    font-size: 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .layui-layout-admin .layui-side {
+        display: none;
+    }
+
+    .layui-layout-admin .layui-body,
+    .layui-layout-admin .layui-footer {
+        left: 0;
+    }
+
+    .layui-layout-admin .layui-layout-left {
+        display: none;
+    }
+
+    .store-auth-main {
+        padding: 12px 12px 0;
+    }
+
+    .store-auth-uid {
+        width: 120px;
+    }
+
+    .store-auth-submit {
+        margin-top: 10px;
+    }
+}

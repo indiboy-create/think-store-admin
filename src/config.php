@@ -32,7 +32,7 @@ return [
     // 用户模型类名，为空时直接使用 auth_user 表查询
     'auth_user_model' => '',
 
-    // URL 参数认证时是否忽略大小写，保持与原 think-auth 行为一致
+    // URL 参数认证时是否忽略大小写
     'auth_url_lowercase' => true,
 
     // 中间件无需认证的规则，支持 * 通配符

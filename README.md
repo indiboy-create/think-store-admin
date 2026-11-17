@@ -2,7 +2,7 @@
 
 ThinkPHP 8 权限认证扩展，基于规则（Rule）、角色（Role）、用户角色关系（RoleUser）和角色规则关系（RoleRule）实现 RBAC 权限控制。支持按钮级、接口级、控制器/方法级认证，并可按用户字段设置条件规则。
 
-本项目参考 [indiboy-create/think-auth](https://github.com/indiboy-create/think-auth) 重写，包名、命名空间、数据表、配置名和命令行均使用 `store` 前缀，可与应用中其它 auth 扩展共存。
+本项目参考 [indiboy-create/think-auth](https://github.com/indiboy-create/think-auth) 重写，包名、命名空间、数据表、配置名和命令行均使用 `store` 前缀。
 
 包内同时提供基于 layui 的权限总览主题：页面由包内 View 渲染，静态资源通过内置 assets 路由输出。接入登录中间件后访问 `/store/think-store-auth/index`，即可查看运行配置、数据表、路由清单，并按用户 ID 只读查询规则与角色；本地演示可设置 `theme_access = public`。
 
@@ -127,15 +127,13 @@ if (Auth::check('admin/user/index', 1)) {
 }
 ```
 
-也可以通过全局函数判断：
+也可以直接使用全局函数 `store_auth_check()`：
 
 ```php
 if (store_auth_check('admin/user/index', 1)) {
     // 拥有该规则权限
 }
 ```
-
-为兼容 think-auth，`auth_check()`、`get_auth_rules()`、`get_auth_roles()`、`get_auth_role_ids()` 也会在未被其它扩展定义时注册。多个扩展共存时请优先使用 `store_auth_*` 系列函数。
 
 ### 多规则认证
 
@@ -371,24 +369,6 @@ return [
 | `php think store:auth:install --drop` | 删除并重建认证数据表，会清空数据 |
 | `php think store:auth:purge --uid=1` | 删除指定用户的角色关系并清理认证缓存 |
 
-## 从 think-auth 迁移
-
-| think-auth | think-store-auth |
-| --- | --- |
-| `youvision/think-auth` | `youvision/think-store-auth` |
-| `youvision\auth\...` | `youvision\store\auth\...` |
-| `config/auth.php`（配置名 `auth`） | `config/store_auth.php`（配置名 `store_auth`） |
-| `auth_rule` / `auth_role` / `auth_role_user` / `auth_role_rule` | `store_auth_rule` / `store_auth_role` / `store_auth_role_user` / `store_auth_role_rule` |
-| `php think auth:config` | `php think store:auth:config` |
-| `php think auth:install` | `php think store:auth:install` |
-| `auth_check()` / `get_auth_rules()` 等 | 优先使用 `store_auth_check()` / `store_auth_rules()` 等 |
-
-迁移时需要注意：
-
-- `check()` 的 `$type` 现在会按规则表的 `type` 字段过滤，`0` 表示不限制。若历史数据的 `type` 不是 `1`，请显式传入对应类型或 `0`。
-- `roles($uid)` 返回包含 `role_id` 和 `role` 关联数据的数组；`roles($uid, 'role_id')` 的行为保持不变。
-- 条件解析器更严格，同时支持引号内含 `and` / `or` 的字符串；无法识别的表达式按不通过处理。
-- 表名和命令已带 `store` 前缀，与原扩展可以同时安装。如需沿用原表名，请自行调整模型与 SQL。
 
 ## 目录结构
 

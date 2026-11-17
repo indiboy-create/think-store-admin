@@ -174,6 +174,24 @@ return [
         ],
     ],
 
+    // 跳转响应配置
+    'jump' => [
+        // 为空时使用包内 src/tpl/dispatch_jump.tpl
+        'success_tmpl' => '',
+        'error_tmpl' => '',
+
+        // 跳转等待时间（秒）
+        'wait' => 3,
+
+        // JSON 响应码，保持 think-jump 语义
+        'success_code' => 1,
+        'error_code' => 0,
+        'result_code' => 0,
+
+        // redirect 默认 HTTP 状态码
+        'redirect_code' => 302,
+    ],
+
     // 权限总览主题路由
     'route' => [
         // 是否注册内置主题路由

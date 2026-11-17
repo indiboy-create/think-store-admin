@@ -42,7 +42,7 @@ php think store:admin:config
 php think store:admin:config --force
 ```
 
-配置项按用途分为 `auth`、`salt`、`jwt`、`layui`、`upload` 五组，主题与路由配置单独列出。
+配置项按用途分为 `auth`、`salt`、`jwt`、`layui`、`upload`、`jump` 六组，主题与路由配置单独列出。
 
 ### auth
 
@@ -354,6 +354,92 @@ return [
 ```
 
 > 上传接口默认挂 `JwtAuth`，不使用主题页面的 `ThemeAccess`。服务端会重新校验后缀、大小、MIME；客户端 `accept`、`exts`、`size` 不能作为安全依据。上传目录应禁止执行 PHP 等脚本。
+
+### jump
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `jump.success_tmpl` | 空 | 成功跳转模板；为空时使用包内 `src/tpl/dispatch_jump.tpl` |
+| `jump.error_tmpl` | 空 | 失败跳转模板；为空时使用包内模板 |
+| `jump.wait` | `3` | 页面跳转等待秒数 |
+| `jump.success_code` | `1` | Ajax/JSON 成功响应码 |
+| `jump.error_code` | `0` | Ajax/JSON 失败响应码 |
+| `jump.result_code` | `0` | `result()` 默认响应码 |
+| `jump.redirect_code` | `302` | `redirect()` 默认状态码 |
+
+`Jump` 是控制器 trait，ThinkPHP 8 主项目可以直接接入。
+
+**1. 在 BaseController 中引入**
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace app;
+
+use youvision\store\admin\Jump;
+
+abstract class BaseController
+{
+    use Jump;
+
+    protected $app;
+    protected $request;
+
+    public function __construct(\think\App $app)
+    {
+        $this->app = $app;
+        $this->request = $app->request;
+        $this->initialize();
+    }
+
+    protected function initialize()
+    {
+    }
+}
+```
+
+**2. 控制器中直接返回**
+
+```php
+namespace app\controller;
+
+use app\BaseController;
+
+class User extends BaseController
+{
+    public function save()
+    {
+        return $this->success('保存成功', 'user/index');
+    }
+
+    public function remove()
+    {
+        return $this->error('删除失败', 'user/index');
+    }
+
+    public function api()
+    {
+        return $this->result(['id' => 1], 0, 'ok', 'json');
+    }
+
+    public function go()
+    {
+        return $this->redirect('/user/index', 302);
+    }
+}
+```
+
+行为说明：
+
+- 普通 HTML 请求：`success()` / `error()` 渲染跳转模板。
+- Ajax/JSON 请求：返回 `code/msg/data/url/wait`；`success` 默认 `code = 1`，`error` 默认 `code = 0`。
+- `result()` 返回 `code/msg/time/data`，默认 JSON。
+- `redirect()` 默认 302，支持隐式传参。
+- 四个方法都抛出 `HttpResponseException`，调用处必须 `return`，且不要在之后继续输出。
+- 控制器方法不要命名为 `success`、`error`、`result`、`redirect`。
+- 自定义模板可配置为绝对路径。
+- 该模块使用 MulanPSL-2.0 上游实现，详见 `THIRD_PARTY_NOTICES.md`。
 
 ### 主题与路由
 
@@ -676,6 +762,7 @@ route/
 src/
 ├── Auth.php                静态入口
 ├── AssetController.php     包内静态资源输出
+├── Jump.php                控制器跳转响应 trait
 ├── Jwt.php                 JWT 静态入口
 ├── Service.php             服务注册与主题路由加载
 ├── Theme.php               主题地址与页面元数据
@@ -711,6 +798,8 @@ src/
 │   ├── CacheStore.php
 │   ├── NullStore.php
 │   └── SessionStore.php
+├── tpl/
+│   └── dispatch_jump.tpl   跳转提示模板
 └── support/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php

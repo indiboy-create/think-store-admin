@@ -5,6 +5,8 @@ declare(strict_types=1);
 use think\facade\Route;
 use youvision\store\admin\AssetController;
 use youvision\store\admin\ThemeController;
+use youvision\store\admin\controller\UploadController;
+use youvision\store\admin\middleware\JwtAuth;
 use youvision\store\admin\middleware\ThemeAccess;
 
 /*
@@ -46,3 +48,15 @@ $register = static function () use ($segment): void {
 
 $group = Route::group($prefix, $register);
 $group->middleware($middleware);
+// 上传接口独立于主题页面，避免继承 ThemeAccess 的 theme_permission
+if ((bool) config('store_admin.upload.enabled', true)) {
+    $uploadMiddleware = (array) config('store_admin.upload.middleware', [JwtAuth::class]);
+    $uploadPath = ($prefix === '' ? '' : $prefix . '/')
+        . ($segment === '' ? '' : $segment . '/')
+        . 'upload';
+
+    Route::post($uploadPath, [UploadController::class, 'upload'])
+        ->middleware($uploadMiddleware)
+        ->name('store_admin.upload')
+        ->completeMatch();
+}

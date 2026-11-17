@@ -106,6 +106,74 @@ return [
         'uid_claim' => 'user_id',
     ],
 
+    // Layui 树形与表格工具配置
+    'layui' => [
+        // 主键字段名
+        'id' => 'id',
+
+        // 父级字段名
+        'pid' => 'pid',
+
+        // 名称字段名
+        'title' => 'title',
+
+        // 子级字段名
+        'children' => 'children',
+
+        // Layui dropdown 字段映射
+        'dropdown' => [
+            'id' => 'id',
+            'title' => 'title',
+            'child' => 'child',
+            'source_child' => 'children',
+        ],
+    ],
+
+    // 上传接口配置
+    'upload' => [
+        // 是否启用上传接口
+        'enabled' => true,
+
+        // 上传文件域名称，与 Layui upload 的 field 保持一致
+        'field' => 'file',
+
+        // topthink/think-filesystem 的磁盘名
+        'disk' => 'public',
+
+        // 存储路径模板，支持 {date}、{Y}、{m}、{d}
+        'path' => 'uploads/{date}',
+
+        // 磁盘未配置 url 时使用的 URL 前缀
+        'url_prefix' => '/storage',
+
+        // 允许的文件后缀
+        'allowed_ext' => [
+            'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp',
+            'pdf', 'zip', 'rar', '7z',
+            'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt',
+        ],
+
+        // 禁止的文件后缀，优先于 allowed_ext
+        'denied_ext' => [
+            'php', 'phtml', 'phar', 'jsp', 'asp', 'aspx',
+            'exe', 'sh', 'bat', 'cmd', 'html', 'htm', 'svg', 'js', 'xml',
+        ],
+
+        // 允许的 MIME 类型，为空表示不额外限制
+        'allowed_mime' => [],
+
+        // 单个文件最大字节数
+        'max_size' => 10 * 1024 * 1024,
+
+        // 单次最多上传文件数
+        'max_files' => 9,
+
+        // 上传接口中间件，默认要求 JWT 登录
+        'middleware' => [
+            \youvision\store\admin\middleware\JwtAuth::class,
+        ],
+    ],
+
     // 权限总览主题路由
     'route' => [
         // 是否注册内置主题路由

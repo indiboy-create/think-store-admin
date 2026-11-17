@@ -11,6 +11,7 @@ ThinkPHP 8 权限认证扩展，基于规则（Rule）、角色（Role）、用�
 - ThinkPHP >= 8.0
 - `topthink/think-view` ^2.0（随本包自动安装）
 - `firebase/php-jwt` ^7.2（随本包自动安装）
+- `topthink/think-filesystem` ^3.0（随本包自动安装）
 
 ## 安装
 
@@ -41,7 +42,7 @@ php think store:admin:config
 php think store:admin:config --force
 ```
 
-配置项按用途分为 `auth`、`salt`、`jwt` 三组，主题与路由配置单独列出。
+配置项按用途分为 `auth`、`salt`、`jwt`、`layui`、`upload` 五组，主题与路由配置单独列出。
 
 ### auth
 
@@ -170,6 +171,189 @@ Route::group('api', function () {
 ```
 
 JWT 黑名单写入 ThinkPHP Cache，多 Worker/多节点部署时必须使用共享缓存（Redis 或共享文件）。
+
+### layui
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `layui.id` | `id` | 主键字段名 |
+| `layui.pid` | `pid` | 父级字段名 |
+| `layui.title` | `title` | 名称字段名 |
+| `layui.children` | `children` | `toTree()` 输出的子级字段名 |
+| `layui.dropdown.id` | `id` | dropdown 数据源主键字段 |
+| `layui.dropdown.title` | `title` | dropdown 数据源标题字段 |
+| `layui.dropdown.child` | `child` | dropdown 输出子级字段 |
+| `layui.dropdown.source_child` | `children` | 输入数据中的子级字段 |
+
+用于把扁平数据转换为 Layui 树形组件，并封装 table 服务端响应：
+
+```php
+use youvision\store\admin\support\LayuiTable;
+use youvision\store\admin\support\LayuiTree;
+
+$tree = (new LayuiTree())->init($list);
+
+$tree->toTree();                  // tree.render 数据
+$tree->toTreeTable();             // treeTable.render 数据
+$tree->toMenu();                  // ul.layui-menu
+$tree->toNav(['tree' => true]);   // ul.layui-nav
+
+LayuiTable::response($paginator); // {code: 0, msg: '', count, data}
+LayuiTable::page();
+LayuiTable::sort(['id', 'created_at']);
+LayuiTable::columns([['field' => 'id', 'title' => 'ID']]);
+```
+
+`LayuiTable` 的 `code = 0` 是 Layui 表格约定，与 JWT/Auth 的 `code = 1` 成功码不同。
+
+> `LayuiTree::instance()` 是进程内单例，常驻内存环境建议直接使用 `new LayuiTree()`，或在请求结束时调用 `LayuiTree::reset()`。本模块不新增数据表。
+
+#### layui.dropdown
+
+`LayuiDropdown` 生成 Layui dropdown 所需的数据与操作结果：
+
+```php
+use youvision\store\admin\support\LayuiDropdown;
+
+$items = LayuiDropdown::items($tree);
+
+$render = LayuiDropdown::render([
+    'elem' => '#more-menu',
+    'id' => 'more-menu',
+    'trigger' => 'hover',
+    'data' => $items,
+]);
+
+$reload = LayuiDropdown::reload('more-menu', $newItems, ['show' => true]);
+$reloadData = LayuiDropdown::reloadData('more-menu', $newItems);
+$close = LayuiDropdown::close('more-menu');
+$open = LayuiDropdown::open('more-menu');
+```
+
+`reload` / `reloadData` 返回结构：
+
+```json
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+    "id": "more-menu",
+    "options": {
+      "data": [],
+      "show": true,
+      "customName": {"id": "id", "title": "title", "children": "child"}
+    }
+  }
+}
+```
+
+前端调用：
+
+```js
+fetch('/api/dropdown').then(function (res) {
+  return res.json();
+}).then(function (res) {
+  dropdown.reload(res.data.id, res.data.options);
+});
+```
+
+- `items()`：把树形数据转换为 `id/title/child` 结构，支持分割线和菜单组。
+- `divider()`：生成分割线数据。
+- `group($title, $children)`：生成纵向菜单组。
+- `render()`：生成 `dropdown.render` 配置。
+- `reload()`：完整重载响应。
+- `reloadData()`：仅数据重载响应。
+- `close()` / `open()`：生成关闭/打开操作结果。
+- 该模块只返回数组，不注册 HTTP 路由；由业务控制器返回 JSON。
+
+### upload
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `upload.enabled` | `true` | 是否注册上传接口 |
+| `upload.field` | `file` | 上传文件域名称，与 Layui `field` 一致 |
+| `upload.disk` | `public` | `think-filesystem` 磁盘名 |
+| `upload.path` | `uploads/{date}` | 存储路径模板，支持 `{date}`、`{Y}`、`{m}`、`{d}` |
+| `upload.url_prefix` | `/storage` | 磁盘未配置 `url` 时的访问地址前缀 |
+| `upload.allowed_ext` | 常见图片/文档/压缩包 | 允许的文件后缀 |
+| `upload.denied_ext` | php、html、svg 等 | 禁止的后缀，优先于允许列表 |
+| `upload.allowed_mime` | `[]` | 额外 MIME 白名单，空表示不限制 |
+| `upload.max_size` | `10485760` | 单文件最大字节数 |
+| `upload.max_files` | `9` | 单次最多文件数 |
+| `upload.middleware` | `[JwtAuth::class]` | 上传接口中间件，默认要求 JWT 登录 |
+
+上传接口：
+
+```text
+POST /store/think-store-admin/upload
+```
+
+返回结构：
+
+```json
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+    "src": "/storage/uploads/20261117/xxxx.png",
+    "url": "/storage/uploads/20261117/xxxx.png",
+    "name": "photo.png",
+    "size": 12345,
+    "ext": "png",
+    "mime": "image/png"
+  }
+}
+```
+
+多文件上传时，`data` 为数组；`files` 始终返回完整列表。
+
+```php
+use youvision\store\admin\support\LayuiUploads;
+
+$result = LayuiUploads::handle($request);      // 自动读取 request->file('file')
+$result = LayuiUploads::single($file);         // 单文件
+$result = LayuiUploads::multiple($files);      // 多文件
+```
+
+Layui 前端：
+
+```js
+layui.use(function () {
+  var upload = layui.upload;
+
+  upload.render({
+    elem: '#upload-image',
+    url: '/store/think-store-admin/upload',
+    field: 'file',
+    accept: 'images',
+    exts: 'jpg|jpeg|png|gif|webp',
+    size: 2048,
+    done: function (res) {
+      if (res.code === 0) {
+        console.log(res.data.src);
+      }
+    }
+  });
+});
+```
+
+上传依赖 `topthink/think-filesystem` 的磁盘配置，例如 `config/filesystem.php`：
+
+```php
+return [
+    'default' => 'local',
+    'disks' => [
+        'public' => [
+            'type' => 'local',
+            'root' => public_path() . 'storage',
+            'url' => '/storage',
+            'visibility' => 'public',
+        ],
+    ],
+];
+```
+
+> 上传接口默认挂 `JwtAuth`，不使用主题页面的 `ThemeAccess`。服务端会重新校验后缀、大小、MIME；客户端 `accept`、`exts`、`size` 不能作为安全依据。上传目录应禁止执行 PHP 等脚本。
 
 ### 主题与路由
 
@@ -498,6 +682,8 @@ src/
 ├── ThemeController.php     权限总览页与查询接口
 ├── View.php                包内模板渲染器
 ├── config.php              默认配置
+├── controller/
+│   └── UploadController.php Layui 上传接口
 ├── helper.php              全局函数
 ├── command/
 │   ├── Config.php          发布配置命令
@@ -529,6 +715,10 @@ src/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
     ├── Jwt.php             JWT 签发与校验
+    ├── LayuiDropdown.php   Layui dropdown 数据与重载
+    ├── LayuiTable.php      Layui table 服务端工具
+    ├── LayuiTree.php       Layui 树形结构工具
+    ├── LayuiUploads.php    Layui 上传接口工具
     ├── RuleMatcher.php
     ├── Salting.php         密码加盐算法
     └── SqlSplitter.php

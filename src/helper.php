@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use youvision\store\admin\Auth;
+use youvision\store\admin\Jwt;
 use youvision\store\admin\support\Salting;
 
 if (!function_exists('store_admin_check')) {
@@ -105,5 +106,51 @@ if (!function_exists('store_admin_verify_password')) {
     function store_admin_verify_password(string $login, string $password): int
     {
         return Auth::verifyPassword($login, $password);
+    }
+}
+if (!function_exists('store_admin_jwt_issue')) {
+    /**
+     * @param array<string, mixed> $claims
+     */
+    function store_admin_jwt_issue(array $claims = []): string
+    {
+        return Jwt::issue($claims);
+    }
+}
+
+if (!function_exists('store_admin_jwt_check')) {
+    /**
+     * @return array<string, mixed>
+     */
+    function store_admin_jwt_check(string $token): array
+    {
+        return Jwt::check($token);
+    }
+}
+
+if (!function_exists('store_admin_jwt_refresh')) {
+    /**
+     * @return array<string, mixed>
+     */
+    function store_admin_jwt_refresh(string $token): array
+    {
+        return Jwt::refresh($token);
+    }
+}
+
+if (!function_exists('store_admin_jwt_logout')) {
+    /**
+     * @return array<string, mixed>
+     */
+    function store_admin_jwt_logout(string $token): array
+    {
+        return Jwt::logout($token);
+    }
+}
+
+if (!function_exists('store_admin_jwt_token')) {
+    function store_admin_jwt_token(\think\Request $request): string
+    {
+        return Jwt::tokenFromRequest($request);
     }
 }

@@ -52,10 +52,12 @@ final class ThemeTest extends TestCase
     public function testConfigSummary(): void
     {
         $summary = $this->theme([
-            'auth_on' => 0,
-            'auth_type' => 2,
-            'auth_cache_store' => 'cache',
-            'auth_user' => 'users',
+            'auth' => [
+                'on' => 0,
+                'type' => 2,
+                'cache_store' => 'cache',
+                'user' => 'users',
+            ],
         ])->configSummary();
 
         $values = [];

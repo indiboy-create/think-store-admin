@@ -30,16 +30,18 @@ class DatabaseRepository implements Repository
     {
         $this->app = $app;
         $this->config = array_replace_recursive([
-            'auth_user' => 'member',
-            'auth_user_pk' => 'id',
-            'auth_user_model' => '',
-            'auth_user_fields' => [
-                'email' => 'email',
-                'mobile' => 'mobile',
-                'username' => 'username',
-                'password' => 'password',
-                'salt' => 'salt',
-                'salt2' => 'salt2',
+            'auth' => [
+                'user' => 'member',
+                'user_pk' => 'id',
+                'user_model' => '',
+                'user_fields' => [
+                    'email' => 'email',
+                    'mobile' => 'mobile',
+                    'username' => 'username',
+                    'password' => 'password',
+                    'salt' => 'salt',
+                    'salt2' => 'salt2',
+                ],
             ],
         ], $config);
     }
@@ -94,18 +96,18 @@ class DatabaseRepository implements Repository
 
     public function user(int $uid): array
     {
-        $model = trim((string) $this->config['auth_user_model']);
+        $model = trim((string) $this->config['auth']['user_model']);
 
         if ($model !== '' && class_exists($model)) {
             $instance = new $model();
-            $pk = (string) $this->config['auth_user_pk'];
+            $pk = (string) $this->config['auth']['user_pk'];
             $row = $instance->where($pk, $uid)->find();
 
             return $row === null ? [] : (array) $row->toArray();
         }
 
-        $row = Db::name((string) $this->config['auth_user'])
-            ->where((string) $this->config['auth_user_pk'], $uid)
+        $row = Db::name((string) $this->config['auth']['user'])
+            ->where((string) $this->config['auth']['user_pk'], $uid)
             ->find();
 
         return is_array($row) ? $row : [];
@@ -114,7 +116,7 @@ class DatabaseRepository implements Repository
     /**
      * 按用户名、邮箱或手机号查找用户
      *
-     * 查询字段由 auth_user_fields 的 username、email、mobile 映射决定，
+     * 查询字段由 auth.user_fields 的 username、email、mobile 映射决定，
      * 映射为空时跳过该字段。
      */
     public function findByLogin(string $login): array
@@ -125,7 +127,7 @@ class DatabaseRepository implements Repository
             return [];
         }
 
-        $fields = (array) ($this->config['auth_user_fields'] ?? []);
+        $fields = (array) ($this->config['auth']['user_fields'] ?? []);
         $columns = [];
 
         foreach (['username', 'email', 'mobile'] as $key) {
@@ -142,7 +144,7 @@ class DatabaseRepository implements Repository
             return [];
         }
 
-        $query = Db::name((string) $this->config['auth_user']);
+        $query = Db::name((string) $this->config['auth']['user']);
 
         foreach ($columns as $index => $column) {
             if ($index === 0) {

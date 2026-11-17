@@ -13,7 +13,7 @@ use youvision\store\admin\Auth;
 /**
  * 控制器/方法级权限认证中间件
  *
- * 规则名称为 控制器/方法 的小写形式，可通过 auth_middleware_prefix 增加前缀。
+ * 规则名称为 控制器/方法 的小写形式，可通过 auth.middleware_prefix 增加前缀。
  */
 class AuthCheck
 {
@@ -32,10 +32,10 @@ class AuthCheck
     {
         $config = $app === null ? [] : (array) $app->config->get('store_admin', []);
 
-        $this->allow = (array) ($config['auth_middleware_allow'] ?? []);
-        $this->uidAttribute = (string) ($config['auth_middleware_uid'] ?? 'user_id');
-        $this->prefix = trim((string) ($config['auth_middleware_prefix'] ?? ''), '/');
-        $this->json = (bool) ($config['auth_middleware_json'] ?? false);
+        $this->allow = (array) ($config['auth']['middleware_allow'] ?? []);
+        $this->uidAttribute = (string) ($config['auth']['middleware_uid'] ?? 'user_id');
+        $this->prefix = trim((string) ($config['auth']['middleware_prefix'] ?? ''), '/');
+        $this->json = (bool) ($config['auth']['middleware_json'] ?? false);
     }
 
     public function handle(Request $request, Closure $next, string ...$params): Response

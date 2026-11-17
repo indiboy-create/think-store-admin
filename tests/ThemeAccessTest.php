@@ -95,7 +95,7 @@ final class ThemeAccessTest extends TestCase
 
     public function testCustomUidAttribute(): void
     {
-        $middleware = $this->middleware(['auth_middleware_uid' => 'admin_id']);
+        $middleware = $this->middleware(['auth' => ['middleware_uid' => 'admin_id']]);
 
         $request = new Request();
         $request->admin_id = 9;

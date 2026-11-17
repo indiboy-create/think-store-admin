@@ -10,6 +10,7 @@ ThinkPHP 8 权限认证扩展，基于规则（Rule）、角色（Role）、用�
 - PHP >= 8.2
 - ThinkPHP >= 8.0
 - `topthink/think-view` ^2.0（随本包自动安装）
+- `firebase/php-jwt` ^7.2（随本包自动安装）
 
 ## 安装
 
@@ -40,41 +41,31 @@ php think store:admin:config
 php think store:admin:config --force
 ```
 
-配置项说明：
+配置项按用途分为 `auth`、`salt`、`jwt` 三组，主题与路由配置单独列出。
+
+### auth
 
 | 配置项 | 默认值 | 说明 |
 | --- | --- | --- |
-| `auth_on` | `1` | 权限认证总开关。`1` 开启，`0` 关闭；关闭后 `check()` 一律返回 `true` |
-| `auth_type` | `1` | 认证方式。`1` 实时认证，每次认证都查询数据库；`2` 持久缓存认证 |
-| `auth_cache_store` | `cache` | `auth_type = 2` 时的持久缓存驱动：`cache`（Redis/共享文件，推荐常驻内存与多 Worker）、`session`（仅单进程）、`none` |
-| `auth_cache_ttl` | `0` | 持久缓存有效期（秒），`0` 表示永久 |
-| `auth_cache_prefix` | `store_admin` | 缓存键前缀 |
-| `auth_request_cache` | `true` | 是否启用请求内规则缓存；无 HTTP 请求上下文时自动关闭 |
-| `auth_user` | `member` | 用户表名（不含数据库前缀），需包含 `email`、`mobile`、`username`、`password`、`salt`、`salt2` |
-| `auth_user_pk` | `id` | 用户表主键 |
-| `auth_user_model` | 空 | 用户模型类名。留空时直接使用 `auth_user` 表查询 |
-| `auth_user_fields` | 见“用户表字段与密码加盐” | 用户表字段映射 |
-| `salting` | 见“用户表字段与密码加盐” | 密码加盐配置，兼容 think-salting 算法 |
-| `auth_url_lowercase` | `true` | URL 参数认证时是否忽略大小写 |
-| `auth_middleware_allow` | `[]` | 中间件无需认证的规则，支持 `*` 通配符 |
-| `auth_middleware_uid` | `user_id` | 中间件读取登录用户 ID 的请求属性名 |
-| `auth_middleware_prefix` | 空 | 中间件规则前缀，例如 `admin` |
-| `auth_middleware_json` | `false` | 未授权时是否统一返回 JSON |
-| `route.enabled` | `true` | 是否注册权限总览主题路由 |
-| `route.prefix` | `store` | 主题路由前缀，留空表示不添加前缀 |
-| `route.segment` | `think-store-admin` | 包内命名空间，留空表示页面直接挂在路由前缀下 |
-| `route.middleware` | `[]` | 应用到整组主题路由的中间件，例如登录或权限中间件 |
-| `view` | 空 | 模板目录；留空使用包内 `theme/view`，填写时相对路径从项目根目录算起 |
-| `assets` | `assets` | 静态资源地址；相对路径拼在命名空间后，以 `/` 开头时视为绝对地址 |
-| `theme_user` | `0` | 总览页默认查询的用户 ID，`0` 表示当前登录用户 |
-| `theme_access` | `auth` | 主题访问模式：`auth` 需登录，`public` 公开（仅用于本地演示） |
-| `theme_permission` | 空 | 访问主题及查询其他用户所需规则；为空表示仅允许查询当前登录用户 |
+| `auth.on` | `1` | 权限认证总开关。`1` 开启，`0` 关闭；关闭后 `check()` 一律返回 `true` |
+| `auth.type` | `1` | 认证方式。`1` 实时认证，每次认证都查询数据库；`2` 持久缓存认证 |
+| `auth.cache_store` | `cache` | `auth.type = 2` 时的持久缓存驱动：`cache`（Redis/共享文件，推荐常驻内存与多 Worker）、`session`（仅单进程）、`none` |
+| `auth.cache_ttl` | `0` | 持久缓存有效期（秒），`0` 表示永久 |
+| `auth.cache_prefix` | `store_admin` | 缓存键前缀 |
+| `auth.request_cache` | `true` | 是否启用请求内规则缓存；无 HTTP 请求上下文时自动关闭 |
+| `auth.user` | `member` | 用户表名（不含数据库前缀），需包含 `email`、`mobile`、`username`、`password`、`salt`、`salt2` |
+| `auth.user_pk` | `id` | 用户表主键 |
+| `auth.user_model` | 空 | 用户模型类名。留空时直接使用 `auth.user` 表查询 |
+| `auth.user_fields` | 见下方 | 用户表字段映射 |
+| `auth.url_lowercase` | `true` | URL 参数认证时是否忽略大小写 |
+| `auth.middleware_allow` | `[]` | 中间件无需认证的规则，支持 `*` 通配符 |
+| `auth.middleware_uid` | `user_id` | 中间件读取登录用户 ID 的请求属性名 |
+| `auth.middleware_prefix` | 空 | 中间件规则前缀，例如 `admin` |
+| `auth.middleware_json` | `false` | 未授权时是否统一返回 JSON |
 
-> `auth_type = 2` 时推荐使用 `auth_cache_store = cache`（Redis 或共享文件缓存）；多 Worker 下不要使用 `session`。`auth_request_cache` 默认启用，无 HTTP 请求上下文时自动关闭。
+> `auth.type = 2` 时推荐使用 `auth.cache_store = cache`（Redis 或共享文件缓存）；多 Worker 下不要使用 `session`。`auth.request_cache` 默认启用，无 HTTP 请求上下文时自动关闭。
 
-## 用户表字段与密码加盐
-
-`auth_user` 指向的用户表需要包含以下字段，字段名可通过 `auth_user_fields` 覆盖：
+`auth.user` 指向的用户表需要包含以下字段，字段名可通过 `auth.user_fields` 覆盖：
 
 | 用途 | 默认字段 |
 | --- | --- |
@@ -83,28 +74,32 @@ php think store:admin:config --force
 | 第一段盐 | `salt` |
 | 第二段盐 | `salt2` |
 
-建议为 `username`、`email`、`mobile` 建立唯一索引，避免登录查询匹配到多条用户记录；将 `auth_user_fields` 中不存在的字段映射为空字符串即可跳过该字段。
+建议为 `username`、`email`、`mobile` 建立唯一索引，避免登录查询匹配到多条用户记录；将 `auth.user_fields` 中不存在的字段映射为空字符串即可跳过该字段。
 
 ```php
-'auth_user_fields' => [
-    'email' => 'email',
-    'mobile' => 'mobile',
-    'username' => 'username',
-    'password' => 'password',
-    'salt' => 'salt',
-    'salt2' => 'salt2',
-],
-
-'salting' => [
-    'prefix' => 'Y!o^U',
-    'suffix' => 'V,is*Io(N',
-    'charset' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{};:,.<>?/~|',
-    'length' => 8,
-    'length2' => 10,
-    'salt_field' => 'salt',
-    'salt2_field' => 'salt2',
+'auth' => [
+    'user_fields' => [
+        'email' => 'email',
+        'mobile' => 'mobile',
+        'username' => 'username',
+        'password' => 'password',
+        'salt' => 'salt',
+        'salt2' => 'salt2',
+    ],
 ],
 ```
+
+### salt
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `salting.prefix` | `Y!o^U` | MD5 加盐算法前缀，上线后不建议修改 |
+| `salting.suffix` | `V,is*Io(N` | MD5 加盐算法后缀，上线后不建议修改 |
+| `salting.charset` | 大小写字母、数字和符号 | `makePair` 随机盐字符池，支持 UTF-8 |
+| `salting.length` | `8` | 第一段盐默认长度 |
+| `salting.length2` | `10` | 第二段盐默认长度 |
+| `salting.salt_field` | `salt` | 用户表 salt 字段名 |
+| `salting.salt2_field` | `salt2` | 用户表 salt2 字段名 |
 
 登录校验：
 
@@ -127,6 +122,68 @@ $hash = Salting::encode($password, $pair['salt'], $pair['salt2']);
 对应的全局函数：`store_admin_make_salt()`、`store_admin_make_salt_pair()`、`store_admin_password()`、`store_admin_password_verify()`、`store_admin_verify_password()`。
 
 > 该算法为兼容 think-salting 的旧 MD5 加盐算法。`prefix`、`suffix` 上线后不要修改，否则历史密码将无法校验；新项目建议使用 `password_hash()` 的 Argon2id 或 bcrypt。
+
+### jwt
+
+> `jwt.secret` 为空时无法签发或校验 Token。生产环境请通过环境变量注入，并在 `config/store_admin.php` 中读取配置。
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `jwt.secret` | 空 | HS256 签名密钥，必须设置 |
+| `jwt.alg` | `HS256` | 签名算法，应与密钥类型匹配 |
+| `jwt.issuer` | 空 | 签发者，配置后校验 `iss` |
+| `jwt.audience` | 空 | 受众，配置后校验 `aud` |
+| `jwt.ttl` | `604800` | Token 有效期（7 天） |
+| `jwt.refresh_threshold` | `36000` | 剩余有效期低于该值时提示刷新（10 小时） |
+| `jwt.leeway` | `60` | 时钟偏差容忍秒数 |
+| `jwt.blacklist_prefix` | `store_admin:jwt:blacklist:` | 注销黑名单缓存前缀 |
+| `jwt.uid_claim` | `user_id` | Token 业务载荷中的用户 ID 字段名 |
+
+使用示例：
+
+```php
+use youvision\store\admin\Jwt;
+
+$token = Jwt::issue(['user_id' => 1, 'username' => 'alice']);
+
+$result = Jwt::check($token);
+// code = 1 表示有效；need_refresh = true 时提示客户端刷新
+
+$refreshed = Jwt::refresh($token);
+// 旧 Token 进入黑名单，data 为新 Token
+
+$logout = Jwt::logout($token);
+// 将当前 Token 加入黑名单
+```
+
+校验失败时返回 `code = 0`，并通过 `error_code` 区分格式错误、过期、已注销等情况。
+
+JWT 中间件与 RBAC 中间件按顺序注册，`JwtAuth` 会先写入 `request->user_id`：
+
+```php
+Route::group('api', function () {
+    // 需要登录的接口
+})->middleware([
+    \youvision\store\admin\middleware\JwtAuth::class,
+    \youvision\store\admin\middleware\AuthCheck::class,
+]);
+```
+
+JWT 黑名单写入 ThinkPHP Cache，多 Worker/多节点部署时必须使用共享缓存（Redis 或共享文件）。
+
+### 主题与路由
+
+| 配置项 | 默认值 | 说明 |
+| --- | --- | --- |
+| `route.enabled` | `true` | 是否注册权限总览主题路由 |
+| `route.prefix` | `store` | 主题路由前缀，留空表示不添加前缀 |
+| `route.segment` | `think-store-admin` | 包内命名空间，留空表示页面直接挂在路由前缀下 |
+| `route.middleware` | `[]` | 应用到整组主题路由的中间件，例如登录或权限中间件 |
+| `view` | 空 | 模板目录；留空使用包内 `theme/view`，填写时相对路径从项目根目录算起 |
+| `assets` | `assets` | 静态资源地址；相对路径拼在命名空间后，以 `/` 开头时视为绝对地址 |
+| `theme_user` | `0` | 总览页默认查询的用户 ID，`0` 表示当前登录用户 |
+| `theme_access` | `auth` | 主题访问模式：`auth` 需登录，`public` 公开（仅用于本地演示） |
+| `theme_permission` | 空 | 访问主题及查询其他用户所需规则；为空表示仅允许查询当前登录用户 |
 
 ## 初始化数据表
 
@@ -235,7 +292,7 @@ return [
 ];
 ```
 
-控制器名、方法名会自动拼成规则名；`auth_middleware_prefix` 可增加前缀，例如配置为 `admin` 时规则为 `admin/user/index`。`auth_middleware_allow` 用于配置免认证规则，支持 `*` 通配符。
+控制器名、方法名会自动拼成规则名；`auth.middleware_prefix` 可增加前缀，例如配置为 `admin` 时规则为 `admin/user/index`。`auth.middleware_allow` 用于配置免认证规则，支持 `*` 通配符。
 
 自定义认证示例：
 
@@ -341,19 +398,19 @@ store_admin_purge_user(1); // 全局函数
 user/index?type=admin
 ```
 
-只有当前请求同时包含 `type=admin` 时，该规则才会被认为通过。默认忽略大小写，可通过 `auth_url_lowercase` 关闭。将 `$mode` 指定为非 `url` 值时，只匹配规则节点，不校验请求参数。
+只有当前请求同时包含 `type=admin` 时，该规则才会被认为通过。默认忽略大小写，可通过 `auth.url_lowercase` 关闭。将 `$mode` 指定为非 `url` 值时，只匹配规则节点，不校验请求参数。
 
 ## 缓存
 
-- `auth_type = 1`：实时认证，权限变更即时生效；同一请求内会复用规则列表，可通过 `auth_request_cache = false` 关闭。
-- `auth_type = 2`：首次认证后将规则名称与条件字段签名写入持久缓存：
+- `auth.type = 1`：实时认证，权限变更即时生效；同一请求内会复用规则列表，可通过 `auth.request_cache = false` 关闭。
+- `auth.type = 2`：首次认证后将规则名称与条件字段签名写入持久缓存：
   - 条件规则引用的用户字段（如 `{score}`）发生变化时，下次认证会自动重新计算。
-  - 使用 `auth_cache_store = cache` 前，需要先配置 ThinkPHP 的 `cache`（Redis 或共享文件缓存）。
+  - 使用 `auth.cache_store = cache` 前，需要先配置 ThinkPHP 的 `cache`（Redis 或共享文件缓存）。
   - 角色、规则、用户角色关系变化时，通过包内模型操作会自动刷新缓存。
   - 直接使用 SQL 或查询构造器修改授权关系后，需要手动调用 `flush()`。
-  - `auth_cache_ttl` 控制缓存有效期，`0` 表示永久；授权变更频繁时建议设置合理有效期。
+  - `auth.cache_ttl` 控制缓存有效期，`0` 表示永久；授权变更频繁时建议设置合理有效期。
 - 请求内缓存挂在当前 `Request` 对象上，请求结束即回收，不会跨请求保留；无 HTTP 请求上下文时自动关闭。
-- 常驻内存（Swoole/Workerman）多 Worker 环境应使用 `auth_cache_store = cache` 并配置共享缓存；模型事件清理共享缓存后，其他 Worker 的下个请求会重新计算。`session` 无法清理其他会话，仅适用于单进程场景。
+- 常驻内存（Swoole/Workerman）多 Worker 环境应使用 `auth.cache_store = cache` 并配置共享缓存；模型事件清理共享缓存后，其他 Worker 的下个请求会重新计算。`session` 无法清理其他会话，仅适用于单进程场景。
 
 ```php
 use youvision\store\admin\Auth;
@@ -435,6 +492,7 @@ route/
 src/
 ├── Auth.php                静态入口
 ├── AssetController.php     包内静态资源输出
+├── Jwt.php                 JWT 静态入口
 ├── Service.php             服务注册与主题路由加载
 ├── Theme.php               主题地址与页面元数据
 ├── ThemeController.php     权限总览页与查询接口
@@ -452,6 +510,7 @@ src/
 │   └── store_admin.sql      建表语句
 ├── middleware/
 │   ├── AuthCheck.php       控制器/方法级认证中间件
+│   ├── JwtAuth.php         JWT 认证中间件
 │   └── ThemeAccess.php     权限总览访问控制
 ├── model/
 │   ├── Role.php
@@ -469,6 +528,7 @@ src/
 └── support/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
+    ├── Jwt.php             JWT 签发与校验
     ├── RuleMatcher.php
     ├── Salting.php         密码加盐算法
     └── SqlSplitter.php
@@ -493,7 +553,7 @@ composer test
 
 - 规则名称应来自后端定义或固定白名单，不要直接使用未经校验的用户输入。
 - 用户 ID 必须来自可信的登录态，不要使用请求参数中的用户 ID。
-- 生产环境建议使用 `auth_type = 1`，权限变更可即时生效。
+- 生产环境建议使用 `auth.type = 1`，权限变更可即时生效。
 - 使用 `store:admin:install --drop` 前请确认数据已备份。
 - 删除用户时必须调用 `Auth::purgeUser($uid)` 或 `store:admin:purge --uid`，避免用户 ID 复用时继承旧权限。
 - 直接使用 SQL 或查询构造器修改角色、规则、授权关系后，需手动调用 `Auth::flush()`；模型事件不会覆盖绕过模型的写入。

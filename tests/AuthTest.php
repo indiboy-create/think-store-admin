@@ -62,7 +62,7 @@ final class AuthTest extends TestCase
 
     public function testAuthOffAlwaysPasses(): void
     {
-        $auth = $this->makeAuth(['auth_on' => 0], new FakeRepository());
+        $auth = $this->makeAuth(['auth' => ['on' => 0]], new FakeRepository());
 
         self::assertTrue($auth->check('any/rule', 1));
     }
@@ -143,7 +143,7 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
         $store = new MemoryStore();
 
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertTrue($auth->check('user/index', 1));
         self::assertSame(1, $repository->ruleCalls);
@@ -152,7 +152,7 @@ final class AuthTest extends TestCase
         self::assertSame([], $store->data['store_admin:list:1:1']['signature']);
 
         unset($auth);
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertTrue($auth->check('user/index', 1));
         self::assertSame(1, $repository->ruleCalls);
@@ -172,7 +172,7 @@ final class AuthTest extends TestCase
             'signature' => [],
         ]);
 
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertTrue($auth->check('cached/rule', 1));
         self::assertSame(0, $repository->roleIdCalls);
@@ -186,7 +186,7 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
         $store = new MemoryStore();
 
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         $auth->rules(1);
         $auth->rules(2);
@@ -210,7 +210,7 @@ final class AuthTest extends TestCase
         $repository->users = [1 => ['id' => 1, 'score' => 50]];
         $store = new MemoryStore();
 
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertFalse($auth->check('grade2', 1));
         self::assertSame(1, $repository->ruleCalls);
@@ -219,7 +219,7 @@ final class AuthTest extends TestCase
 
         unset($auth);
         $repository->users = [1 => ['id' => 1, 'score' => 150]];
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertTrue($auth->check('grade2', 1));
         self::assertSame(2, $repository->ruleCalls);
@@ -227,7 +227,7 @@ final class AuthTest extends TestCase
         self::assertSame(['grade2'], $store->data['store_admin:list:1:1']['rules']);
 
         unset($auth);
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
 
         self::assertTrue($auth->check('grade2', 1));
         self::assertSame(2, $repository->ruleCalls);
@@ -241,7 +241,7 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
         $store = new MemoryStore();
 
-        $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
+        $auth = $this->makeAuth(['auth' => ['type' => 2]], $repository, $store);
         $auth->rules(1);
 
         self::assertNotEmpty($store->data);
@@ -298,7 +298,7 @@ final class AuthTest extends TestCase
         $app = new App(dirname(__DIR__));
         $app->config->set(array_replace(
             (array) require dirname(__DIR__) . '/src/config.php',
-            ['auth_request_cache' => false]
+            ['auth' => ['request_cache' => false]]
         ), 'store_admin');
 
         $request = (new Request())->withGet([])->withServer([
@@ -368,7 +368,7 @@ final class TestableAuth extends Auth
 {
     protected function requestCacheEnabled(): bool
     {
-        return (bool) ($this->config['auth_request_cache'] ?? true);
+        return (bool) ($this->config['auth']['request_cache'] ?? true);
     }
 
     public function useRequest(Request $request): void

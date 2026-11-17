@@ -66,7 +66,7 @@ final class MiddlewareTest extends TestCase
 
     public function testAllowListSkipsCheck(): void
     {
-        $middleware = $this->middleware(['auth_middleware_allow' => ['/']]);
+        $middleware = $this->middleware(['auth' => ['middleware_allow' => ['/']]]);
         $request = new Request();
 
         $response = $middleware->handle($request, $this->next());
@@ -76,7 +76,7 @@ final class MiddlewareTest extends TestCase
 
     public function testAllowWildcard(): void
     {
-        $middleware = $this->middleware(['auth_middleware_allow' => ['user/*']]);
+        $middleware = $this->middleware(['auth' => ['middleware_allow' => ['user/*']]]);
         $middleware->forceRule = 'user/login';
 
         $response = $middleware->handle(new Request(), $this->next());
@@ -109,7 +109,7 @@ final class MiddlewareTest extends TestCase
 
     public function testRulePrefix(): void
     {
-        $middleware = $this->middleware(['auth_middleware_prefix' => 'admin']);
+        $middleware = $this->middleware(['auth' => ['middleware_prefix' => 'admin']]);
         $middleware->forceRule = 'user/index';
 
         $middleware->exposeAllowed('admin/user/index');

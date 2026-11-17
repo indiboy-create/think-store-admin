@@ -72,14 +72,16 @@ final class AuthPasswordTest extends TestCase
         ];
 
         $auth = $this->auth($repository, [
-            'auth_user_pk' => 'uid',
-            'auth_user_fields' => [
-                'username' => 'user_name',
-                'email' => '',
-                'mobile' => '',
-                'password' => 'pwd',
-                'salt' => 's1',
-                'salt2' => 's2',
+            'auth' => [
+                'user_pk' => 'uid',
+                'user_fields' => [
+                    'username' => 'user_name',
+                    'email' => '',
+                    'mobile' => '',
+                    'password' => 'pwd',
+                    'salt' => 's1',
+                    'salt2' => 's2',
+                ],
             ],
         ]);
 

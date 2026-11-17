@@ -70,7 +70,7 @@ class Auth
         string $mode = 'url',
         string $relation = 'or'
     ): bool {
-        if (!(int) $this->config['auth_on']) {
+        if (!(int) $this->config['auth']['on']) {
             return true;
         }
 
@@ -88,7 +88,7 @@ class Auth
             $params,
             $mode,
             $relation,
-            (bool) $this->config['auth_url_lowercase']
+            (bool) $this->config['auth']['url_lowercase']
         );
     }
 
@@ -117,7 +117,7 @@ class Auth
     /**
      * 校验用户名、邮箱或手机号与密码
      *
-     * 成功返回用户 ID，失败返回 0。用户表字段通过 auth_user_fields 映射，
+     * 成功返回用户 ID，失败返回 0。用户表字段通过 auth.user_fields 映射，
      * 密码算法兼容 think-salting 的 AdminPassword。
      */
     public function verifyPassword(string $login, string $password): int
@@ -134,7 +134,7 @@ class Auth
             return 0;
         }
 
-        $fields = (array) ($this->config['auth_user_fields'] ?? []);
+        $fields = (array) ($this->config['auth']['user_fields'] ?? []);
         $passwordField = (string) ($fields['password'] ?? 'password');
         $saltField = (string) ($fields['salt'] ?? ($this->config['salting']['salt_field'] ?? 'salt'));
         $salt2Field = (string) ($fields['salt2'] ?? ($this->config['salting']['salt2_field'] ?? 'salt2'));
@@ -153,7 +153,7 @@ class Auth
             return 0;
         }
 
-        $pk = (string) ($this->config['auth_user_pk'] ?? 'id');
+        $pk = (string) ($this->config['auth']['user_pk'] ?? 'id');
 
         return (int) ($user[$pk] ?? 0);
     }
@@ -298,7 +298,7 @@ class Auth
         $this->store->put($storeKey, [
             'rules' => $authList,
             'signature' => $signature,
-        ], (int) $this->config['auth_cache_ttl']);
+        ], (int) $this->config['auth']['cache_ttl']);
 
         return $authList;
     }
@@ -348,7 +348,7 @@ class Auth
      */
     protected function requestCacheEnabled(): bool
     {
-        if (!(bool) ($this->config['auth_request_cache'] ?? true)) {
+        if (!(bool) ($this->config['auth']['request_cache'] ?? true)) {
             return false;
         }
 
@@ -428,11 +428,11 @@ class Auth
 
     protected function createStore(): Store
     {
-        if ((int) $this->config['auth_type'] !== 2) {
+        if ((int) $this->config['auth']['type'] !== 2) {
             return new NullStore();
         }
 
-        $store = strtolower(trim((string) $this->config['auth_cache_store']));
+        $store = strtolower(trim((string) $this->config['auth']['cache_store']));
 
         if ($store === 'cache') {
             return new CacheStore();
@@ -452,7 +452,7 @@ class Auth
 
     protected function cacheKeyPrefix(): string
     {
-        $prefix = trim((string) $this->config['auth_cache_prefix'], ':');
+        $prefix = trim((string) $this->config['auth']['cache_prefix'], ':');
 
         return $prefix === '' ? 'list:' : $prefix . ':list:';
     }

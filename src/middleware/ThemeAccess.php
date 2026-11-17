@@ -31,7 +31,7 @@ class ThemeAccess
 
         $this->mode = strtolower(trim((string) ($config['theme_access'] ?? 'auth')));
         $this->permission = trim((string) ($config['theme_permission'] ?? ''));
-        $this->uidAttribute = (string) ($config['auth_middleware_uid'] ?? 'user_id');
+        $this->uidAttribute = (string) ($config['auth']['middleware_uid'] ?? 'user_id');
     }
 
     public function handle(Request $request, Closure $next): Response

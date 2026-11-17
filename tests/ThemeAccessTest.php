@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use Closure;
 use think\App;
 use think\Request;
 use think\Response;
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\middleware\ThemeAccess;
+use youvision\store\admin\middleware\ThemeAccess;
 
 final class ThemeAccessTest extends TestCase
 {
@@ -19,7 +19,7 @@ final class ThemeAccessTest extends TestCase
     private function middleware(array $config = []): TestableThemeAccess
     {
         $app = new App(dirname(__DIR__));
-        $app->config->set($config, 'store_auth');
+        $app->config->set($config, 'store_admin');
 
         return new TestableThemeAccess($app);
     }
@@ -44,7 +44,7 @@ final class ThemeAccessTest extends TestCase
         $response = $this->middleware()->handle($request, $this->next());
 
         self::assertSame(200, $response->getCode());
-        self::assertSame(5, $request->middleware('store_auth_uid'));
+        self::assertSame(5, $request->middleware('store_admin_uid'));
     }
 
     public function testPublicModeAllowsAnonymous(): void
@@ -103,7 +103,7 @@ final class ThemeAccessTest extends TestCase
         $response = $middleware->handle($request, $this->next());
 
         self::assertSame(200, $response->getCode());
-        self::assertSame(9, $request->middleware('store_auth_uid'));
+        self::assertSame(9, $request->middleware('store_admin_uid'));
     }
 }
 

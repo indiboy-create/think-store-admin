@@ -9,7 +9,7 @@
     var form = window.layui.form;
     var table = window.layui.table;
     var layer = window.layui.layer;
-    var main = document.querySelector('.store-auth-main');
+    var main = document.querySelector('.store-admin-main');
 
     if (!main) {
       return;
@@ -19,8 +19,8 @@
     var initialUid = parseInt(main.getAttribute('data-uid') || '0', 10) || 0;
 
     table.render({
-      elem: '#store-auth-rules',
-      id: 'store-auth-rules',
+      elem: '#store-admin-rules',
+      id: 'store-admin-rules',
       data: [],
       page: false,
       size: 'sm',
@@ -32,8 +32,8 @@
     });
 
     table.render({
-      elem: '#store-auth-roles',
-      id: 'store-auth-roles',
+      elem: '#store-admin-roles',
+      id: 'store-admin-roles',
       data: [],
       page: false,
       size: 'sm',
@@ -57,13 +57,13 @@
       rules = rules || [];
       roles = roles || [];
 
-      table.reload('store-auth-rules', {
+      table.reload('store-admin-rules', {
         data: rules.map(function (name) {
           return { name: String(name) };
         })
       });
 
-      table.reload('store-auth-roles', {
+      table.reload('store-admin-roles', {
         data: roles.map(function (item) {
           return {
             role_id: item && item.role_id !== undefined ? item.role_id : '—',
@@ -75,8 +75,8 @@
         })
       });
 
-      setCount('store-auth-rule-count', rules.length);
-      setCount('store-auth-role-count', roles.length);
+      setCount('store-admin-rule-count', rules.length);
+      setCount('store-admin-role-count', roles.length);
     }
 
     function load(uid) {
@@ -119,7 +119,7 @@
         });
     }
 
-    form.on('submit(store-auth-query)', function (data) {
+    form.on('submit(store-admin-query)', function (data) {
       var uid = parseInt(data.field.uid, 10);
 
       if (!uid || uid < 1) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
 /**
  * 主题元数据与可见地址
@@ -12,7 +12,7 @@ namespace youvision\store\auth;
  */
 final class Theme
 {
-    public const DEFAULT_SEGMENT = 'think-store-auth';
+    public const DEFAULT_SEGMENT = 'think-store-admin';
 
     protected string $packageRoot;
 
@@ -26,7 +26,7 @@ final class Theme
     }
 
     /**
-     * 主题页面根地址，例如 /store/think-store-auth
+     * 主题页面根地址，例如 /store/think-store-admin
      */
     public function base(): string
     {
@@ -105,7 +105,7 @@ final class Theme
     {
         if (class_exists(\Composer\InstalledVersions::class)) {
             try {
-                $version = \Composer\InstalledVersions::getPrettyVersion('youvision/think-store-auth');
+                $version = \Composer\InstalledVersions::getPrettyVersion('youvision/think-store-admin');
 
                 if (is_string($version) && $version !== '') {
                     return $version;
@@ -139,7 +139,7 @@ final class Theme
             ['label' => '认证开关', 'value' => (int) ($config['auth_on'] ?? 1) === 1 ? '已开启' : '已关闭'],
             ['label' => '认证方式', 'value' => (int) ($config['auth_type'] ?? 1) === 2 ? '持久缓存认证' : '实时认证'],
             ['label' => '缓存驱动', 'value' => (string) ($config['auth_cache_store'] ?? 'cache')],
-            ['label' => '缓存前缀', 'value' => (string) ($config['auth_cache_prefix'] ?? 'store_auth')],
+            ['label' => '缓存前缀', 'value' => (string) ($config['auth_cache_prefix'] ?? 'store_admin')],
             ['label' => '请求内缓存', 'value' => (bool) ($config['auth_request_cache'] ?? true) ? '启用' : '关闭'],
             ['label' => '用户表', 'value' => (string) ($config['auth_user'] ?? 'member')],
             ['label' => '用户主键', 'value' => (string) ($config['auth_user_pk'] ?? 'id')],
@@ -159,10 +159,10 @@ final class Theme
     public function tables(): array
     {
         return [
-            ['name' => 'store_auth_rule', 'title' => '权限规则', 'desc' => '规则标识、类型、状态与条件表达式'],
-            ['name' => 'store_auth_role', 'title' => '权限角色', 'desc' => '角色名称与启用状态'],
-            ['name' => 'store_auth_role_user', 'title' => '用户角色关系', 'desc' => '用户与角色的多对多关联'],
-            ['name' => 'store_auth_role_rule', 'title' => '角色规则关系', 'desc' => '角色与规则的关联，决定角色权限'],
+            ['name' => 'store_admin_rule', 'title' => '权限规则', 'desc' => '规则标识、类型、状态与条件表达式'],
+            ['name' => 'store_admin_role', 'title' => '权限角色', 'desc' => '角色名称与启用状态'],
+            ['name' => 'store_admin_role_user', 'title' => '用户角色关系', 'desc' => '用户与角色的多对多关联'],
+            ['name' => 'store_admin_role_rule', 'title' => '角色规则关系', 'desc' => '角色与规则的关联，决定角色权限'],
         ];
     }
 
@@ -188,7 +188,7 @@ final class Theme
     public function meta(): array
     {
         return [
-            ['label' => '包名', 'value' => 'youvision/think-store-auth'],
+            ['label' => '包名', 'value' => 'youvision/think-store-admin'],
             ['label' => '版本', 'value' => $this->version()],
             ['label' => 'PHP', 'value' => '^8.0'],
             ['label' => 'ThinkPHP', 'value' => '^8.0'],

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\repository;
+namespace youvision\store\admin\repository;
 
 use think\App;
 use think\facade\Db;
-use youvision\store\auth\contract\Repository;
-use youvision\store\auth\model\Role;
-use youvision\store\auth\model\RoleUser;
-use youvision\store\auth\model\RoleRule;
+use youvision\store\admin\contract\Repository;
+use youvision\store\admin\model\Role;
+use youvision\store\admin\model\RoleUser;
+use youvision\store\admin\model\RoleRule;
 
 /**
  * 基于数据库的认证数据源
@@ -29,10 +29,18 @@ class DatabaseRepository implements Repository
     public function __construct(App $app, array $config = [])
     {
         $this->app = $app;
-        $this->config = array_merge([
+        $this->config = array_replace_recursive([
             'auth_user' => 'member',
             'auth_user_pk' => 'id',
             'auth_user_model' => '',
+            'auth_user_fields' => [
+                'email' => 'email',
+                'mobile' => 'mobile',
+                'username' => 'username',
+                'password' => 'password',
+                'salt' => 'salt',
+                'salt2' => 'salt2',
+            ],
         ], $config);
     }
 
@@ -99,6 +107,52 @@ class DatabaseRepository implements Repository
         $row = Db::name((string) $this->config['auth_user'])
             ->where((string) $this->config['auth_user_pk'], $uid)
             ->find();
+
+        return is_array($row) ? $row : [];
+    }
+
+    /**
+     * 按用户名、邮箱或手机号查找用户
+     *
+     * 查询字段由 auth_user_fields 的 username、email、mobile 映射决定，
+     * 映射为空时跳过该字段。
+     */
+    public function findByLogin(string $login): array
+    {
+        $login = trim($login);
+
+        if ($login === '') {
+            return [];
+        }
+
+        $fields = (array) ($this->config['auth_user_fields'] ?? []);
+        $columns = [];
+
+        foreach (['username', 'email', 'mobile'] as $key) {
+            $column = trim((string) ($fields[$key] ?? ''));
+
+            if ($column !== '') {
+                $columns[] = $column;
+            }
+        }
+
+        $columns = array_values(array_unique($columns));
+
+        if ($columns === []) {
+            return [];
+        }
+
+        $query = Db::name((string) $this->config['auth_user']);
+
+        foreach ($columns as $index => $column) {
+            if ($index === 0) {
+                $query->where($column, $login);
+            } else {
+                $query->whereOr($column, $login);
+            }
+        }
+
+        $row = $query->find();
 
         return is_array($row) ? $row : [];
     }

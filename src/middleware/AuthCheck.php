@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\middleware;
+namespace youvision\store\admin\middleware;
 
 use Closure;
 use think\App;
 use think\Request;
 use think\Response;
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 /**
  * 控制器/方法级权限认证中间件
@@ -30,7 +30,7 @@ class AuthCheck
 
     public function __construct(?App $app = null)
     {
-        $config = $app === null ? [] : (array) $app->config->get('store_auth', []);
+        $config = $app === null ? [] : (array) $app->config->get('store_admin', []);
 
         $this->allow = (array) ($config['auth_middleware_allow'] ?? []);
         $this->uidAttribute = (string) ($config['auth_middleware_uid'] ?? 'user_id');

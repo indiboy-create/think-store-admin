@@ -17,7 +17,7 @@ return [
     'auth_cache_ttl' => 0,
 
     // 缓存键前缀
-    'auth_cache_prefix' => 'store_auth',
+    'auth_cache_prefix' => 'store_admin',
 
     // 是否启用请求内规则缓存；无 HTTP 请求上下文时自动关闭
     'auth_request_cache' => true,
@@ -31,6 +31,27 @@ return [
 
     // 用户模型类名，为空时直接使用 auth_user 表查询
     'auth_user_model' => '',
+
+    // 用户表字段映射；auth_user 表需包含 email、mobile、username、password、salt、salt2
+    'auth_user_fields' => [
+        'email' => 'email',
+        'mobile' => 'mobile',
+        'username' => 'username',
+        'password' => 'password',
+        'salt' => 'salt',
+        'salt2' => 'salt2',
+    ],
+
+    // 密码加盐配置，兼容 think-salting 的 AdminPassword 算法
+    'salting' => [
+        'prefix' => 'Y!o^U',
+        'suffix' => 'V,is*Io(N',
+        'charset' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{};:,.<>?/~|',
+        'length' => 8,
+        'length2' => 10,
+        'salt_field' => 'salt',
+        'salt2_field' => 'salt2',
+    ],
 
     // URL 参数认证时是否忽略大小写
     'auth_url_lowercase' => true,
@@ -56,7 +77,7 @@ return [
         'prefix' => 'store',
 
         // 包内命名空间，留空表示页面直接挂在路由前缀下
-        'segment' => 'think-store-auth',
+        'segment' => 'think-store-admin',
 
         // 应用到整组主题路由的中间件，例如 [\app\middleware\Auth::class]
         'middleware' => [],

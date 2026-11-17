@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests\Support;
+namespace youvision\store\admin\tests\Support;
 
-use youvision\store\auth\contract\Store;
+use youvision\store\admin\contract\Store;
 
 final class MemoryStore implements Store
 {

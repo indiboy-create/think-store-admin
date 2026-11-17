@@ -1,36 +1,36 @@
 /*
- * Think Store Auth 权限总览主题
+ * Think Store Admin 权限总览主题
  * 复用 layui 的布局、卡片、表格与表单组件，这里只补充少量页面级样式。
  */
 
 :root {
-    --store-auth-brand: #16baaa;
-    --store-auth-brand-soft: #e6f8f5;
-    --store-auth-ink: #1f2d2c;
-    --store-auth-muted: #7a9291;
-    --store-auth-line: #e6efed;
-    --store-auth-bg: #f4f8f7;
+    --store-admin-brand: #16baaa;
+    --store-admin-brand-soft: #e6f8f5;
+    --store-admin-ink: #1f2d2c;
+    --store-admin-muted: #7a9291;
+    --store-admin-line: #e6efed;
+    --store-admin-bg: #f4f8f7;
 }
 
-.store-auth-page {
-    color: var(--store-auth-ink);
-    background: var(--store-auth-bg);
+.store-admin-page {
+    color: var(--store-admin-ink);
+    background: var(--store-admin-bg);
 }
 
-.store-auth-page code {
+.store-admin-page code {
     padding: 1px 6px;
     border-radius: 4px;
     color: #0f5c56;
-    background: var(--store-auth-brand-soft);
+    background: var(--store-admin-brand-soft);
     font-family: "Cascadia Code", Consolas, Monaco, monospace;
     font-size: 12px;
 }
 
-.store-auth-page .layui-header {
+.store-admin-page .layui-header {
     background: #20222a;
 }
 
-.store-auth-logo {
+.store-admin-logo {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -40,166 +40,166 @@
     letter-spacing: 0.2px;
 }
 
-.store-auth-logo .layui-icon {
-    color: var(--store-auth-brand);
+.store-admin-logo .layui-icon {
+    color: var(--store-admin-brand);
     font-size: 20px;
 }
 
-.store-auth-main {
+.store-admin-main {
     padding: 20px 24px 0;
 }
 
-.store-auth-main .layui-card {
+.store-admin-main .layui-card {
     margin-bottom: 15px;
-    border: 1px solid var(--store-auth-line);
+    border: 1px solid var(--store-admin-line);
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(31, 45, 44, 0.03);
 }
 
-.store-auth-main .layui-card-header {
+.store-admin-main .layui-card-header {
     font-size: 15px;
     font-weight: 600;
 }
 
-.store-auth-hint {
+.store-admin-hint {
     margin-left: 6px;
     padding: 0 6px;
     border-radius: 4px;
-    color: var(--store-auth-muted);
+    color: var(--store-admin-muted);
     background: #f2f6f5;
     font-size: 12px;
     font-weight: 400;
 }
 
-.store-auth-hero {
+.store-admin-hero {
     background: linear-gradient(135deg, #ffffff 0%, #f0fbf9 100%);
 }
 
-.store-auth-eyebrow {
+.store-admin-eyebrow {
     display: inline-block;
     margin-bottom: 6px;
-    color: var(--store-auth-brand);
+    color: var(--store-admin-brand);
     font-size: 12px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
 }
 
-.store-auth-title {
+.store-admin-title {
     margin: 0 0 8px;
-    color: var(--store-auth-ink);
+    color: var(--store-admin-ink);
     font-size: 26px;
     font-weight: 700;
     line-height: 1.35;
 }
 
-.store-auth-desc {
+.store-admin-desc {
     max-width: 760px;
     margin: 0;
-    color: var(--store-auth-muted);
+    color: var(--store-admin-muted);
     font-size: 14px;
     line-height: 1.8;
 }
 
-.store-auth-hero__meta {
+.store-admin-hero__meta {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 16px;
 }
 
-.store-auth-stats {
+.store-admin-stats {
     margin-bottom: 15px;
 }
 
-.store-auth-stat {
+.store-admin-stat {
     display: flex;
     flex-direction: column;
     gap: 4px;
     height: 100%;
     padding: 18px 20px;
-    border: 1px solid var(--store-auth-line);
+    border: 1px solid var(--store-admin-line);
     border-radius: 10px;
     background: #ffffff;
 }
 
-.store-auth-stat__num {
-    color: var(--store-auth-brand);
+.store-admin-stat__num {
+    color: var(--store-admin-brand);
     font-size: 26px;
     font-weight: 700;
     line-height: 1.2;
 }
 
-.store-auth-stat__label {
-    color: var(--store-auth-muted);
+.store-admin-stat__label {
+    color: var(--store-admin-muted);
     font-size: 13px;
 }
 
-.store-auth-uid {
+.store-admin-uid {
     width: 200px;
 }
 
-.store-auth-submit {
+.store-admin-submit {
     width: auto;
 }
 
-.store-auth-table-title {
+.store-admin-table-title {
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 4px 0 10px;
-    color: var(--store-auth-ink);
+    color: var(--store-admin-ink);
     font-size: 14px;
     font-weight: 600;
 }
 
-.store-auth-table-item {
+.store-admin-table-item {
     display: flex;
     flex-direction: column;
     gap: 6px;
     height: 100%;
     padding: 14px 16px;
-    border: 1px solid var(--store-auth-line);
+    border: 1px solid var(--store-admin-line);
     border-radius: 8px;
     background: #fbfdfd;
 }
 
-.store-auth-table-item code {
+.store-admin-table-item code {
     align-self: flex-start;
 }
 
-.store-auth-table-item strong {
+.store-admin-table-item strong {
     font-size: 14px;
 }
 
-.store-auth-table-item span {
-    color: var(--store-auth-muted);
+.store-admin-table-item span {
+    color: var(--store-admin-muted);
     font-size: 13px;
 }
 
-.store-auth-value {
+.store-admin-value {
     font-family: "Cascadia Code", Consolas, Monaco, monospace;
     font-size: 13px;
 }
 
-.store-auth-tip {
+.store-admin-tip {
     margin: 12px 0 0;
-    color: var(--store-auth-muted);
+    color: var(--store-admin-muted);
     font-size: 13px;
 }
 
-#store-auth-query,
-#store-auth-config,
-#store-auth-tables,
-#store-auth-routes,
-#store-auth-meta {
+#store-admin-query,
+#store-admin-config,
+#store-admin-tables,
+#store-admin-routes,
+#store-admin-meta {
     scroll-margin-top: 80px;
 }
 
-.store-auth-footer {
+.store-admin-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--store-auth-muted);
+    color: var(--store-admin-muted);
     font-size: 12px;
 }
 
@@ -217,15 +217,15 @@
         display: none;
     }
 
-    .store-auth-main {
+    .store-admin-main {
         padding: 12px 12px 0;
     }
 
-    .store-auth-uid {
+    .store-admin-uid {
         width: 120px;
     }
 
-    .store-auth-submit {
+    .store-admin-submit {
         margin-top: 10px;
     }
 }

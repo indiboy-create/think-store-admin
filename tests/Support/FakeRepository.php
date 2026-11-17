@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests\Support;
+namespace youvision\store\admin\tests\Support;
 
-use youvision\store\auth\contract\Repository;
+use youvision\store\admin\contract\Repository;
 
 final class FakeRepository implements Repository
 {
@@ -22,6 +22,11 @@ final class FakeRepository implements Repository
      * @var array<int, array<string, mixed>>
      */
     public array $users = [];
+
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    public array $loginUsers = [];
 
     /**
      * @var array<int, array<int, mixed>>
@@ -89,6 +94,11 @@ final class FakeRepository implements Repository
         $this->userCalls++;
 
         return $this->users[$uid] ?? [];
+    }
+
+    public function findByLogin(string $login): array
+    {
+        return $this->loginUsers[$login] ?? [];
     }
 
     public function roles(int $uid, string $field = ''): array

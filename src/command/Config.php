@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\command;
+namespace youvision\store\admin\command;
 
 use think\console\Command;
 use think\console\Input;
@@ -16,14 +16,14 @@ class Config extends Command
 {
     protected function configure(): void
     {
-        $this->setName('store:auth:config')
+        $this->setName('store:admin:config')
             ->addOption('force', 'f', Option::VALUE_NONE, 'Overwrite the existing config file')
             ->setDescription('Publish the store auth config file');
     }
 
     protected function execute(Input $input, Output $output): int
     {
-        $target = $this->app->getConfigPath() . 'store_auth.php';
+        $target = $this->app->getConfigPath() . 'store_admin.php';
 
         if (is_file($target) && !$input->getOption('force')) {
             $output->writeln('<info>Config file already exists: ' . $target . '</info>');

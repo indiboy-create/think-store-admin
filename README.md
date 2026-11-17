@@ -1,21 +1,20 @@
-# think-store-auth
+# think-store-admin
 
 ThinkPHP 8 权限认证扩展，基于规则（Rule）、角色（Role）、用户角色关系（RoleUser）和角色规则关系（RoleRule）实现 RBAC 权限控制。支持按钮级、接口级、控制器/方法级认证，并可按用户字段设置条件规则。
 
-本项目参考 [indiboy-create/think-auth](https://github.com/indiboy-create/think-auth) 重写，包名、命名空间、数据表、配置名和命令行均使用 `store` 前缀。
 
-包内同时提供基于 layui 的权限总览主题：页面由包内 View 渲染，静态资源通过内置 assets 路由输出。接入登录中间件后访问 `/store/think-store-auth/index`，即可查看运行配置、数据表、路由清单，并按用户 ID 只读查询规则与角色；本地演示可设置 `theme_access = public`。
+包内同时提供基于 layui 的权限总览主题：页面由包内 View 渲染，静态资源通过内置 assets 路由输出。接入登录中间件后访问 `/store/think-store-admin/index`，即可查看运行配置、数据表、路由清单，并按用户 ID 只读查询规则与角色；本地演示可设置 `theme_access = public`。
 
 ## 环境要求
 
-- PHP >= 8.0
+- PHP >= 8.2
 - ThinkPHP >= 8.0
 - `topthink/think-view` ^2.0（随本包自动安装）
 
 ## 安装
 
 ```bash
-composer require youvision/think-store-auth
+composer require youvision/think-store-admin
 ```
 
 服务与配置会自动注册。如果配置未生成或服务未生效，可执行：
@@ -25,20 +24,20 @@ php think service:discover
 php think vendor:publish
 ```
 
-安装后可直接访问 `/store/think-store-auth/index` 查看权限总览页。主题路由由服务在 `boot()` 阶段注册，宿主项目无需复制视图或静态资源。
+安装后可直接访问 `/store/think-store-admin/index` 查看权限总览页。主题路由由服务在 `boot()` 阶段注册，宿主项目无需复制视图或静态资源。
 
 ## 配置
 
-配置文件位于 `config/store_auth.php`，也可以执行以下命令生成：
+配置文件位于 `config/store_admin.php`，也可以执行以下命令生成：
 
 ```bash
-php think store:auth:config
+php think store:admin:config
 ```
 
 如果文件已存在需要覆盖，追加 `--force`：
 
 ```bash
-php think store:auth:config --force
+php think store:admin:config --force
 ```
 
 配置项说明：
@@ -49,11 +48,13 @@ php think store:auth:config --force
 | `auth_type` | `1` | 认证方式。`1` 实时认证，每次认证都查询数据库；`2` 持久缓存认证 |
 | `auth_cache_store` | `cache` | `auth_type = 2` 时的持久缓存驱动：`cache`（Redis/共享文件，推荐常驻内存与多 Worker）、`session`（仅单进程）、`none` |
 | `auth_cache_ttl` | `0` | 持久缓存有效期（秒），`0` 表示永久 |
-| `auth_cache_prefix` | `store_auth` | 缓存键前缀 |
+| `auth_cache_prefix` | `store_admin` | 缓存键前缀 |
 | `auth_request_cache` | `true` | 是否启用请求内规则缓存；无 HTTP 请求上下文时自动关闭 |
-| `auth_user` | `member` | 用户表名（不含数据库前缀），用于读取用户字段并解析条件中的 `{字段}` |
+| `auth_user` | `member` | 用户表名（不含数据库前缀），需包含 `email`、`mobile`、`username`、`password`、`salt`、`salt2` |
 | `auth_user_pk` | `id` | 用户表主键 |
 | `auth_user_model` | 空 | 用户模型类名。留空时直接使用 `auth_user` 表查询 |
+| `auth_user_fields` | 见“用户表字段与密码加盐” | 用户表字段映射 |
+| `salting` | 见“用户表字段与密码加盐” | 密码加盐配置，兼容 think-salting 算法 |
 | `auth_url_lowercase` | `true` | URL 参数认证时是否忽略大小写 |
 | `auth_middleware_allow` | `[]` | 中间件无需认证的规则，支持 `*` 通配符 |
 | `auth_middleware_uid` | `user_id` | 中间件读取登录用户 ID 的请求属性名 |
@@ -61,7 +62,7 @@ php think store:auth:config --force
 | `auth_middleware_json` | `false` | 未授权时是否统一返回 JSON |
 | `route.enabled` | `true` | 是否注册权限总览主题路由 |
 | `route.prefix` | `store` | 主题路由前缀，留空表示不添加前缀 |
-| `route.segment` | `think-store-auth` | 包内命名空间，留空表示页面直接挂在路由前缀下 |
+| `route.segment` | `think-store-admin` | 包内命名空间，留空表示页面直接挂在路由前缀下 |
 | `route.middleware` | `[]` | 应用到整组主题路由的中间件，例如登录或权限中间件 |
 | `view` | 空 | 模板目录；留空使用包内 `theme/view`，填写时相对路径从项目根目录算起 |
 | `assets` | `assets` | 静态资源地址；相对路径拼在命名空间后，以 `/` 开头时视为绝对地址 |
@@ -71,27 +72,83 @@ php think store:auth:config --force
 
 > `auth_type = 2` 时推荐使用 `auth_cache_store = cache`（Redis 或共享文件缓存）；多 Worker 下不要使用 `session`。`auth_request_cache` 默认启用，无 HTTP 请求上下文时自动关闭。
 
+## 用户表字段与密码加盐
+
+`auth_user` 指向的用户表需要包含以下字段，字段名可通过 `auth_user_fields` 覆盖：
+
+| 用途 | 默认字段 |
+| --- | --- |
+| 登录账号 | `username`、`email`、`mobile` |
+| 密码哈希 | `password` |
+| 第一段盐 | `salt` |
+| 第二段盐 | `salt2` |
+
+建议为 `username`、`email`、`mobile` 建立唯一索引，避免登录查询匹配到多条用户记录；将 `auth_user_fields` 中不存在的字段映射为空字符串即可跳过该字段。
+
+```php
+'auth_user_fields' => [
+    'email' => 'email',
+    'mobile' => 'mobile',
+    'username' => 'username',
+    'password' => 'password',
+    'salt' => 'salt',
+    'salt2' => 'salt2',
+],
+
+'salting' => [
+    'prefix' => 'Y!o^U',
+    'suffix' => 'V,is*Io(N',
+    'charset' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{};:,.<>?/~|',
+    'length' => 8,
+    'length2' => 10,
+    'salt_field' => 'salt',
+    'salt2_field' => 'salt2',
+],
+```
+
+登录校验：
+
+```php
+use youvision\store\admin\Auth;
+
+$uid = Auth::verifyPassword('alice', 'plain-password');
+// 成功返回用户 ID，失败返回 0
+```
+
+注册或重置密码时生成盐与哈希：
+
+```php
+use youvision\store\admin\support\Salting;
+
+$pair = Salting::makePair();
+$hash = Salting::encode($password, $pair['salt'], $pair['salt2']);
+```
+
+对应的全局函数：`store_admin_make_salt()`、`store_admin_make_salt_pair()`、`store_admin_password()`、`store_admin_password_verify()`、`store_admin_verify_password()`。
+
+> 该算法为兼容 think-salting 的旧 MD5 加盐算法。`prefix`、`suffix` 上线后不要修改，否则历史密码将无法校验；新项目建议使用 `password_hash()` 的 Argon2id 或 bcrypt。
+
 ## 初始化数据表
 
 执行安装命令，会自动创建规则表、角色表及关系表，表名会拼接数据库配置中的前缀：
 
 ```bash
-php think store:auth:install
+php think store:admin:install
 ```
 
 创建的数据表：
 
 | 表名 | 说明 |
 | --- | --- |
-| `store_auth_rule` | 权限规则表，`name` 为规则唯一标识，`status = 1` 时有效，`condition` 为条件表达式 |
-| `store_auth_role` | 权限角色表 |
-| `store_auth_role_user` | 用户与角色关系表 |
-| `store_auth_role_rule` | 角色与规则关系表 |
+| `store_admin_rule` | 权限规则表，`name` 为规则唯一标识，`status = 1` 时有效，`condition` 为条件表达式 |
+| `store_admin_role` | 权限角色表 |
+| `store_admin_role_user` | 用户与角色关系表 |
+| `store_admin_role_rule` | 角色与规则关系表 |
 
 需要删除并重建表时追加 `--drop`，**该操作会清空认证数据**：
 
 ```bash
-php think store:auth:install --drop
+php think store:admin:install --drop
 ```
 
 ## 快速开始
@@ -99,7 +156,7 @@ php think store:auth:install --drop
 ### 方法签名
 
 ```php
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 // 检查权限：$name 支持逗号分隔字符串或数组；$type 为规则类型，0 表示不限制；
 // $mode 为 url 时同时校验规则中的请求参数；$relation 支持 or / and
@@ -118,7 +175,7 @@ Auth::flush(int $uid = 0, int $type = 0): void;
 ### 权限判断
 
 ```php
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 if (Auth::check('admin/user/index', 1)) {
     // 拥有该规则权限
@@ -127,10 +184,10 @@ if (Auth::check('admin/user/index', 1)) {
 }
 ```
 
-也可以直接使用全局函数 `store_auth_check()`：
+也可以直接使用全局函数 `store_admin_check()`：
 
 ```php
-if (store_auth_check('admin/user/index', 1)) {
+if (store_admin_check('admin/user/index', 1)) {
     // 拥有该规则权限
 }
 ```
@@ -174,7 +231,7 @@ Auth::check('admin/user/index', 1, 0);  // 不限制类型
 ```php
 // app/middleware.php
 return [
-    \youvision\store\auth\middleware\AuthCheck::class,
+    \youvision\store\admin\middleware\AuthCheck::class,
 ];
 ```
 
@@ -190,7 +247,7 @@ namespace app\middleware;
 use Closure;
 use think\Request;
 use think\Response;
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 class AuthCheck
 {
@@ -214,7 +271,7 @@ class AuthCheck
 ### 获取用户权限与角色
 
 ```php
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 // 用户拥有的全部规则
 $rules = Auth::rules(1);
@@ -229,32 +286,32 @@ $roleIds = Auth::roles(1, 'role_id');
 对应的全局函数：
 
 ```php
-store_auth_rules(1);      // 全部规则
-store_auth_roles(1);      // 全部角色
-store_auth_role_ids(1);   // 全部角色 ID
+store_admin_rules(1);      // 全部规则
+store_admin_roles(1);      // 全部角色
+store_admin_role_ids(1);   // 全部角色 ID
 ```
 
 ## 权限模型
 
 权限认证按规则进行。先定义规则，再将规则分配给角色，最后将用户加入角色：
 
-1. 在 `store_auth_rule` 表中添加规则，例如 `user/edit`。
-2. 在 `store_auth_role` 表中创建角色，例如「内容管理员」。
-3. 在 `store_auth_role_rule` 表中关联角色与规则。
-4. 在 `store_auth_role_user` 表中关联用户与角色。
+1. 在 `store_admin_rule` 表中添加规则，例如 `user/edit`。
+2. 在 `store_admin_role` 表中创建角色，例如「内容管理员」。
+3. 在 `store_admin_role_rule` 表中关联角色与规则。
+4. 在 `store_admin_role_user` 表中关联用户与角色。
 
 一个用户可以属于多个角色，只要其中任意一个角色拥有目标规则，认证即通过。
 
-删除角色或规则时，包内模型事件会同步清理 `store_auth_role_rule`、`store_auth_role_user` 关系并刷新认证缓存。删除用户后应调用：
+删除角色或规则时，包内模型事件会同步清理 `store_admin_role_rule`、`store_admin_role_user` 关系并刷新认证缓存。删除用户后应调用：
 
 ```php
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 Auth::purgeUser(1);       // 删除用户角色关系并清理缓存
-store_auth_purge_user(1); // 全局函数
+store_admin_purge_user(1); // 全局函数
 ```
 
-也可以执行 `php think store:auth:purge --uid=1`。模型事件只在通过模型写入或删除时触发；直接执行 SQL 或使用查询构造器不会自动清理，需要手动调用 `Auth::flush()`。
+也可以执行 `php think store:admin:purge --uid=1`。模型事件只在通过模型写入或删除时触发；直接执行 SQL 或使用查询构造器不会自动清理，需要手动调用 `Auth::flush()`。
 
 ## 条件规则
 
@@ -299,7 +356,7 @@ user/index?type=admin
 - 常驻内存（Swoole/Workerman）多 Worker 环境应使用 `auth_cache_store = cache` 并配置共享缓存；模型事件清理共享缓存后，其他 Worker 的下个请求会重新计算。`session` 无法清理其他会话，仅适用于单进程场景。
 
 ```php
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 Auth::flush(1);    // 清理用户 1 的全部类型缓存
 Auth::flush(1, 1); // 清理用户 1、类型 1 的缓存
@@ -314,14 +371,14 @@ Auth::flush();     // 清理全部认证缓存
 
 | 方法 | 地址 | 说明 |
 | --- | --- | --- |
-| `GET` | `/store/think-store-auth/index` | 权限总览页 |
-| `GET` | `/store/think-store-auth/api/user?uid=1` | 只读查询用户规则与角色 |
-| `GET` | `/store/think-store-auth/assets/<path>` | 输出包内 layui、样式与脚本 |
+| `GET` | `/store/think-store-admin/index` | 权限总览页 |
+| `GET` | `/store/think-store-admin/api/user?uid=1` | 只读查询用户规则与角色 |
+| `GET` | `/store/think-store-admin/assets/<path>` | 输出包内 layui、样式与脚本 |
 
 总览页包含：
 
 - 认证开关、认证方式、缓存驱动、用户表等运行配置。
-- `store_auth_rule`、`store_auth_role`、`store_auth_role_user`、`store_auth_role_rule` 四张数据表的用途。
+- `store_admin_rule`、`store_admin_role`、`store_admin_role_user`、`store_admin_role_rule` 四张数据表的用途。
 - 主题路由清单与包版本信息。
 - 按用户 ID 查询可用规则与所属角色，结果以 layui 数据表格展示。
 
@@ -338,7 +395,7 @@ Auth::flush();     // 清理全部认证缓存
 - `route.middleware` 中的自定义中间件排在 `ThemeAccess` 之前，登录中间件应配置在这里。
 
 ```php
-// config/store_auth.php
+// config/store_admin.php
 return [
     'route' => [
         'middleware' => [\app\middleware\AdminLogin::class],
@@ -350,9 +407,9 @@ return [
 
 ### 自定义与保护
 
-- 修改 `route.prefix` 或 `route.segment` 可调整访问地址，例如 `route.prefix = admin` 时页面地址变为 `/admin/think-store-auth/index`。
+- 修改 `route.prefix` 或 `route.segment` 可调整访问地址，例如 `route.prefix = admin` 时页面地址变为 `/admin/think-store-admin/index`。
 - 将 `route.middleware` 配置为登录或权限中间件，例如 `[\app\middleware\AdminAuth::class]`，可限制主题页面的访问。
-- 将 `view` 配置为 `view/think-store-auth`（相对项目根目录）可在宿主项目覆盖模板。
+- 将 `view` 配置为 `view/think-store-admin`（相对项目根目录）可在宿主项目覆盖模板。
 - 将 `assets` 配置为绝对地址（以 `/` 开头）可改用外部托管的静态资源。
 - `theme_user` 配置为有效用户 ID 后，总览页打开时会自动查询该用户的权限；配置为 `0` 时查询当前登录用户。
 - `route.enabled = false` 时不再注册内置路由，可由应用自行定义。
@@ -363,18 +420,18 @@ return [
 
 | 命令 | 说明 |
 | --- | --- |
-| `php think store:auth:config` | 生成 `config/store_auth.php` 配置文件 |
-| `php think store:auth:config --force` | 覆盖已存在的配置文件 |
-| `php think store:auth:install` | 创建认证数据表，已存在的表不会重复创建 |
-| `php think store:auth:install --drop` | 删除并重建认证数据表，会清空数据 |
-| `php think store:auth:purge --uid=1` | 删除指定用户的角色关系并清理认证缓存 |
+| `php think store:admin:config` | 生成 `config/store_admin.php` 配置文件 |
+| `php think store:admin:config --force` | 覆盖已存在的配置文件 |
+| `php think store:admin:install` | 创建认证数据表，已存在的表不会重复创建 |
+| `php think store:admin:install --drop` | 删除并重建认证数据表，会清空数据 |
+| `php think store:admin:purge --uid=1` | 删除指定用户的角色关系并清理认证缓存 |
 
 
 ## 目录结构
 
 ```text
 route/
-└── store_auth.php          主题页面、查询接口与静态资源路由
+└── store_admin.php          主题页面、查询接口与静态资源路由
 src/
 ├── Auth.php                静态入口
 ├── AssetController.php     包内静态资源输出
@@ -392,7 +449,7 @@ src/
 │   ├── Repository.php      认证数据源契约
 │   └── Store.php           持久缓存契约
 ├── database/
-│   └── store_auth.sql      建表语句
+│   └── store_admin.sql      建表语句
 ├── middleware/
 │   ├── AuthCheck.php       控制器/方法级认证中间件
 │   └── ThemeAccess.php     权限总览访问控制
@@ -413,6 +470,7 @@ src/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
     ├── RuleMatcher.php
+    ├── Salting.php         密码加盐算法
     └── SqlSplitter.php
 theme/
 ├── view/
@@ -436,8 +494,8 @@ composer test
 - 规则名称应来自后端定义或固定白名单，不要直接使用未经校验的用户输入。
 - 用户 ID 必须来自可信的登录态，不要使用请求参数中的用户 ID。
 - 生产环境建议使用 `auth_type = 1`，权限变更可即时生效。
-- 使用 `store:auth:install --drop` 前请确认数据已备份。
-- 删除用户时必须调用 `Auth::purgeUser($uid)` 或 `store:auth:purge --uid`，避免用户 ID 复用时继承旧权限。
+- 使用 `store:admin:install --drop` 前请确认数据已备份。
+- 删除用户时必须调用 `Auth::purgeUser($uid)` 或 `store:admin:purge --uid`，避免用户 ID 复用时继承旧权限。
 - 直接使用 SQL 或查询构造器修改角色、规则、授权关系后，需手动调用 `Auth::flush()`；模型事件不会覆盖绕过模型的写入。
 - 权限总览页与 `api/user` 接口默认需要登录，且仅允许查询本人；`theme_access = public` 仅用于本地演示，不要用于生产。
 - 查看其他用户权限需配置 `theme_permission` 并授予对应规则，同时通过 `route.middleware` 挂载可信登录中间件。

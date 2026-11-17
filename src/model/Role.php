@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\model;
+namespace youvision\store\admin\model;
 
 use think\Model;
 use think\model\relation\HasMany;
-use youvision\store\auth\support\CacheFlusher;
+use youvision\store\admin\support\CacheFlusher;
 
 /**
  * 权限角色
@@ -17,7 +17,7 @@ use youvision\store\auth\support\CacheFlusher;
  */
 class Role extends Model
 {
-    protected $name = 'store_auth_role';
+    protected $name = 'store_admin_role';
 
     protected $pk = 'id';
 

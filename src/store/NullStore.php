@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\store;
+namespace youvision\store\admin\store;
 
-use youvision\store\auth\contract\Store;
+use youvision\store\admin\contract\Store;
 
 /**
  * 不落持久缓存的空实现

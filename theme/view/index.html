@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{$title} - Think Store Auth</title>
-<meta name="description" content="Think Store Auth 权限认证总览：规则、角色、用户关系与运行配置。">
+<title>{$title} - Think Store Admin</title>
+<meta name="description" content="Think Store Admin 权限认证总览：规则、角色、用户关系与运行配置。">
 <link rel="stylesheet" href="{$assets}/layui/css/layui.css">
 <link rel="stylesheet" href="{$assets}/css/index.css">
 </head>
-<body class="layui-layout layui-layout-admin store-auth-page">
+<body class="layui-layout layui-layout-admin store-admin-page">
 <div class="layui-header">
-    <a class="layui-logo store-auth-logo" href="{$home}">
+    <a class="layui-logo store-admin-logo" href="{$home}">
         <i class="layui-icon layui-icon-vercode"></i>
-        <span>Think Store Auth</span>
+        <span>Think Store Admin</span>
     </a>
     <ul class="layui-nav layui-layout-left">
         <li class="layui-nav-item"><a href="{$home}">权限总览</a></li>
-        <li class="layui-nav-item"><a href="#store-auth-query">用户查询</a></li>
-        <li class="layui-nav-item"><a href="#store-auth-config">运行配置</a></li>
-        <li class="layui-nav-item"><a href="#store-auth-tables">数据表</a></li>
+        <li class="layui-nav-item"><a href="#store-admin-query">用户查询</a></li>
+        <li class="layui-nav-item"><a href="#store-admin-config">运行配置</a></li>
+        <li class="layui-nav-item"><a href="#store-admin-tables">数据表</a></li>
     </ul>
     <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item">
@@ -27,7 +27,7 @@
             </a>
         </li>
         <li class="layui-nav-item">
-            <a href="https://github.com/indiboy-create/think-store-auth" target="_blank" rel="noopener">
+            <a href="https://github.com/indiboy-create/think-store-admin" target="_blank" rel="noopener">
                 <i class="layui-icon layui-icon-github"></i> GitHub
             </a>
         </li>
@@ -36,40 +36,40 @@
 
 <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
-        <ul class="layui-nav layui-nav-tree" lay-filter="store-auth-nav">
+        <ul class="layui-nav layui-nav-tree" lay-filter="store-admin-nav">
             <li class="layui-nav-item layui-this">
                 <a href="{$home}"><i class="layui-icon layui-icon-home"></i> 权限总览</a>
             </li>
             <li class="layui-nav-item">
-                <a href="#store-auth-query"><i class="layui-icon layui-icon-user"></i> 用户权限查询</a>
+                <a href="#store-admin-query"><i class="layui-icon layui-icon-user"></i> 用户权限查询</a>
             </li>
             <li class="layui-nav-item">
-                <a href="#store-auth-config"><i class="layui-icon layui-icon-set"></i> 运行配置</a>
+                <a href="#store-admin-config"><i class="layui-icon layui-icon-set"></i> 运行配置</a>
             </li>
             <li class="layui-nav-item">
-                <a href="#store-auth-tables"><i class="layui-icon layui-icon-table"></i> 数据表</a>
+                <a href="#store-admin-tables"><i class="layui-icon layui-icon-table"></i> 数据表</a>
             </li>
             <li class="layui-nav-item">
-                <a href="#store-auth-routes"><i class="layui-icon layui-icon-link"></i> 路由与接口</a>
+                <a href="#store-admin-routes"><i class="layui-icon layui-icon-link"></i> 路由与接口</a>
             </li>
             <li class="layui-nav-item">
-                <a href="#store-auth-meta"><i class="layui-icon layui-icon-about"></i> 包信息</a>
+                <a href="#store-admin-meta"><i class="layui-icon layui-icon-about"></i> 包信息</a>
             </li>
         </ul>
     </div>
 </div>
 
 <div class="layui-body">
-    <main class="store-auth-main" data-base="{$base}" data-api="{$apiUser}" data-uid="{$uid}">
-        <div class="layui-card store-auth-hero">
+    <main class="store-admin-main" data-base="{$base}" data-api="{$apiUser}" data-uid="{$uid}">
+        <div class="layui-card store-admin-hero">
             <div class="layui-card-body">
-                <span class="store-auth-eyebrow">youvision/think-store-auth · {$version}</span>
-                <h1 class="store-auth-title">权限认证总览</h1>
-                <p class="store-auth-desc">
+                <span class="store-admin-eyebrow">youvision/think-store-admin · {$version}</span>
+                <h1 class="store-admin-title">权限认证总览</h1>
+                <p class="store-admin-desc">
                     查看规则、角色、用户关系与当前配置。页面由包内 View 渲染，layui 静态资源通过 assets 路由输出，
                     无需发布到宿主 public 目录。
                 </p>
-                <div class="store-auth-hero__meta">
+                <div class="store-admin-hero__meta">
                     <span class="layui-badge layui-bg-green">认证服务已注册</span>
                     <span class="layui-badge layui-bg-cyan">layui 2.13.9</span>
                     <span class="layui-badge layui-bg-gray">只读总览</span>
@@ -77,52 +77,52 @@
             </div>
         </div>
 
-        <div class="layui-row layui-col-space15 store-auth-stats">
+        <div class="layui-row layui-col-space15 store-admin-stats">
             <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-auth-stat">
-                    <span class="store-auth-stat__num">4</span>
-                    <span class="store-auth-stat__label">认证数据表</span>
+                <div class="store-admin-stat">
+                    <span class="store-admin-stat__num">4</span>
+                    <span class="store-admin-stat__label">认证数据表</span>
                 </div>
             </div>
             <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-auth-stat">
-                    <span class="store-auth-stat__num">3</span>
-                    <span class="store-auth-stat__label">主题路由</span>
+                <div class="store-admin-stat">
+                    <span class="store-admin-stat__num">3</span>
+                    <span class="store-admin-stat__label">主题路由</span>
                 </div>
             </div>
             <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-auth-stat">
-                    <span class="store-auth-stat__num">2</span>
-                    <span class="store-auth-stat__label">CLI 命令</span>
+                <div class="store-admin-stat">
+                    <span class="store-admin-stat__num">2</span>
+                    <span class="store-admin-stat__label">CLI 命令</span>
                 </div>
             </div>
             <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-auth-stat">
-                    <span class="store-auth-stat__num">RBAC</span>
-                    <span class="store-auth-stat__label">规则 / 角色授权模型</span>
+                <div class="store-admin-stat">
+                    <span class="store-admin-stat__num">RBAC</span>
+                    <span class="store-admin-stat__label">规则 / 角色授权模型</span>
                 </div>
             </div>
         </div>
 
-        <div class="layui-card" id="store-auth-query">
+        <div class="layui-card" id="store-admin-query">
             <div class="layui-card-header">
                 用户权限查询
-                <span class="store-auth-hint">只读</span>
+                <span class="store-admin-hint">只读</span>
             </div>
             <div class="layui-card-body">
                 <blockquote class="layui-elem-quote layui-quote-nm">
-                    默认仅可查询当前登录用户。需要查看其他用户时，请在 config/store_auth.php 配置
+                    默认仅可查询当前登录用户。需要查看其他用户时，请在 config/store_admin.php 配置
                     theme_permission，并由拥有该规则的用户操作。该页面不修改任何权限数据。
                 </blockquote>
-                <form class="layui-form" lay-filter="store-auth-form">
+                <form class="layui-form" lay-filter="store-admin-form">
                     <div class="layui-form-item">
                         <label class="layui-form-label">用户 ID</label>
-                        <div class="layui-input-inline store-auth-uid">
+                        <div class="layui-input-inline store-admin-uid">
                             <input type="number" name="uid" min="1" value="{$uid}" autocomplete="off"
                                    placeholder="请输入用户 ID" class="layui-input" lay-verify="required|number">
                         </div>
-                        <div class="layui-input-inline store-auth-submit">
-                            <button type="submit" class="layui-btn" lay-submit lay-filter="store-auth-query">
+                        <div class="layui-input-inline store-admin-submit">
+                            <button type="submit" class="layui-btn" lay-submit lay-filter="store-admin-query">
                                 <i class="layui-icon layui-icon-search"></i> 查询权限
                             </button>
                         </div>
@@ -130,24 +130,24 @@
                 </form>
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md6">
-                        <div class="store-auth-table-title">
+                        <div class="store-admin-table-title">
                             可用规则
-                            <span id="store-auth-rule-count" class="layui-badge layui-bg-gray">0</span>
+                            <span id="store-admin-rule-count" class="layui-badge layui-bg-gray">0</span>
                         </div>
-                        <table id="store-auth-rules" lay-filter="store-auth-rules"></table>
+                        <table id="store-admin-rules" lay-filter="store-admin-rules"></table>
                     </div>
                     <div class="layui-col-md6">
-                        <div class="store-auth-table-title">
+                        <div class="store-admin-table-title">
                             所属角色
-                            <span id="store-auth-role-count" class="layui-badge layui-bg-gray">0</span>
+                            <span id="store-admin-role-count" class="layui-badge layui-bg-gray">0</span>
                         </div>
-                        <table id="store-auth-roles" lay-filter="store-auth-roles"></table>
+                        <table id="store-admin-roles" lay-filter="store-admin-roles"></table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="layui-card" id="store-auth-config">
+        <div class="layui-card" id="store-admin-config">
             <div class="layui-card-header">运行配置</div>
             <div class="layui-card-body">
                 <table class="layui-table" lay-skin="line" lay-size="sm">
@@ -165,7 +165,7 @@
                     {volist name="configs" id="item"}
                     <tr>
                         <td>{$item.label}</td>
-                        <td><span class="store-auth-value">{$item.value}</span></td>
+                        <td><span class="store-admin-value">{$item.value}</span></td>
                     </tr>
                     {/volist}
                     </tbody>
@@ -173,13 +173,13 @@
             </div>
         </div>
 
-        <div class="layui-card" id="store-auth-tables">
+        <div class="layui-card" id="store-admin-tables">
             <div class="layui-card-header">认证数据表</div>
             <div class="layui-card-body">
                 <div class="layui-row layui-col-space15">
                     {volist name="tables" id="item"}
                     <div class="layui-col-md6">
-                        <div class="store-auth-table-item">
+                        <div class="store-admin-table-item">
                             <code>{$item.name}</code>
                             <strong>{$item.title}</strong>
                             <span>{$item.desc}</span>
@@ -187,15 +187,15 @@
                     </div>
                     {/volist}
                 </div>
-                <p class="store-auth-tip">
+                <p class="store-admin-tip">
                     表名会自动拼接数据库配置中的前缀。执行
-                    <code>php think store:auth:install</code>
+                    <code>php think store:admin:install</code>
                     创建数据表。
                 </p>
             </div>
         </div>
 
-        <div class="layui-card" id="store-auth-routes">
+        <div class="layui-card" id="store-admin-routes">
             <div class="layui-card-header">路由与接口</div>
             <div class="layui-card-body">
                 <table class="layui-table" lay-skin="line" lay-size="sm">
@@ -224,7 +224,7 @@
             </div>
         </div>
 
-        <div class="layui-card" id="store-auth-meta">
+        <div class="layui-card" id="store-admin-meta">
             <div class="layui-card-header">包信息</div>
             <div class="layui-card-body">
                 <table class="layui-table" lay-skin="line" lay-size="sm">
@@ -236,7 +236,7 @@
                     {volist name="meta" id="item"}
                     <tr>
                         <td>{$item.label}</td>
-                        <td><span class="store-auth-value">{$item.value}</span></td>
+                        <td><span class="store-admin-value">{$item.value}</span></td>
                     </tr>
                     {/volist}
                     </tbody>
@@ -246,8 +246,8 @@
     </main>
 </div>
 
-<div class="layui-footer store-auth-footer">
-    <span>© {$version} · youvision/think-store-auth</span>
+<div class="layui-footer store-admin-footer">
+    <span>© {$version} · youvision/think-store-admin</span>
     <span>ThinkPHP 8 · Layui 2.13.9</span>
 </div>
 

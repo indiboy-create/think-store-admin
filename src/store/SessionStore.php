@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\store;
+namespace youvision\store\admin\store;
 
 use think\facade\Session;
-use youvision\store\auth\contract\Store;
+use youvision\store\admin\contract\Store;
 
 /**
  * 基于 Session 的认证缓存
  */
 class SessionStore implements Store
 {
-    private const INDEX_KEY = '_store_auth_cache_keys';
+    private const INDEX_KEY = '_store_admin_cache_keys';
 
     public function get(string $key): ?array
     {

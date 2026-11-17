@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\command;
+namespace youvision\store\admin\command;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use youvision\store\auth\service\Auth as AuthService;
+use youvision\store\admin\service\Auth as AuthService;
 
 /**
  * 清理已删除用户的角色关系与认证缓存
@@ -17,7 +17,7 @@ class Purge extends Command
 {
     protected function configure(): void
     {
-        $this->setName('store:auth:purge')
+        $this->setName('store:admin:purge')
             ->addOption('uid', null, Option::VALUE_REQUIRED, 'User ID to purge')
             ->setDescription('Remove a user from auth relations and flush auth cache');
     }

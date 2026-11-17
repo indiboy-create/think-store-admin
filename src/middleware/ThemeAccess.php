@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\middleware;
+namespace youvision\store\admin\middleware;
 
 use Closure;
 use think\App;
 use think\Request;
 use think\Response;
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 /**
  * 权限总览主题访问控制
@@ -27,7 +27,7 @@ class ThemeAccess
 
     public function __construct(?App $app = null)
     {
-        $config = $app === null ? [] : (array) $app->config->get('store_auth', []);
+        $config = $app === null ? [] : (array) $app->config->get('store_admin', []);
 
         $this->mode = strtolower(trim((string) ($config['theme_access'] ?? 'auth')));
         $this->permission = trim((string) ($config['theme_permission'] ?? ''));
@@ -46,7 +46,7 @@ class ThemeAccess
             return $this->deny($request, '请先登录后再访问权限总览');
         }
 
-        $request->store_auth_uid = $uid;
+        $request->store_admin_uid = $uid;
 
         if ($this->permission !== '' && !$this->checkPermission($uid)) {
             return $this->deny($request, '无权访问权限总览');

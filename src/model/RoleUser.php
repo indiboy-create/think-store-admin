@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\model;
+namespace youvision\store\admin\model;
 
 use think\Model;
 use think\model\relation\HasMany;
 use think\model\relation\HasOne;
-use youvision\store\auth\support\CacheFlusher;
+use youvision\store\admin\support\CacheFlusher;
 
 /**
  * 用户与角色的关系
@@ -17,7 +17,7 @@ use youvision\store\auth\support\CacheFlusher;
  */
 class RoleUser extends Model
 {
-    protected $name = 'store_auth_role_user';
+    protected $name = 'store_admin_role_user';
 
     protected $pk = 'user_id';
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\support;
+namespace youvision\store\admin\support;
 
 /**
  * 规则名称与 URL 参数匹配器

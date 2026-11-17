@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\support;
+namespace youvision\store\admin\support;
 
 /**
  * 将 SQL 文件拆分为可独立执行的语句

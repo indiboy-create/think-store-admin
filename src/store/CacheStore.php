@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\store;
+namespace youvision\store\admin\store;
 
 use think\facade\Cache;
-use youvision\store\auth\contract\Store;
+use youvision\store\admin\contract\Store;
 
 /**
  * 基于 ThinkPHP Cache 的认证缓存
  */
 class CacheStore implements Store
 {
-    private const INDEX_KEY = 'store_auth_cache_keys';
+    private const INDEX_KEY = 'store_admin_cache_keys';
 
     public function get(string $key): ?array
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
 use think\App;
 use think\view\driver\Think;
@@ -11,7 +11,7 @@ use think\view\driver\Think;
  * 包内视图渲染器
  *
  * view 配置为空时使用包内 theme/view；不为空时直接作为模板目录，
- * 相对路径从项目根目录算起，例如 view/think-store-auth。
+ * 相对路径从项目根目录算起，例如 view/think-store-admin。
  */
 class View
 {
@@ -53,7 +53,7 @@ class View
      */
     protected function resolvePath(): string
     {
-        $view = rtrim((string) $this->app->config->get('store_auth.view', ''), '/\\');
+        $view = rtrim((string) $this->app->config->get('store_admin.view', ''), '/\\');
 
         if ($view === '') {
             return dirname(__DIR__) . '/theme/view/';
@@ -85,7 +85,7 @@ class View
             'view_path' => $this->path,
             'view_suffix' => 'html',
             'cache_path' => $this->app->getRuntimePath() . 'temp' . DIRECTORY_SEPARATOR,
-            'cache_prefix' => 'store_auth_',
+            'cache_prefix' => 'store_admin_',
         ]);
     }
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\command;
+namespace youvision\store\admin\command;
 
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
-use youvision\store\auth\support\SqlSplitter;
+use youvision\store\admin\support\SqlSplitter;
 
 /**
  * 初始化认证数据表
@@ -17,14 +17,14 @@ class Install extends Command
 {
     protected function configure(): void
     {
-        $this->setName('store:auth:install')
+        $this->setName('store:admin:install')
             ->addOption('drop', null, Option::VALUE_NONE, 'Drop the auth tables before creating them')
             ->setDescription('Create the store auth tables');
     }
 
     protected function execute(Input $input, Output $output): int
     {
-        $file = dirname(__DIR__) . '/database/store_auth.sql';
+        $file = dirname(__DIR__) . '/database/store_admin.sql';
 
         if (!is_file($file)) {
             $output->writeln('<error>SQL file not found: ' . $file . '</error>');

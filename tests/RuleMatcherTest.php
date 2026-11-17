@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\support\RuleMatcher;
+use youvision\store\admin\support\RuleMatcher;
 
 final class RuleMatcherTest extends TestCase
 {

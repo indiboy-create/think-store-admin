@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\contract;
+namespace youvision\store\admin\contract;
 
 /**
  * 认证结果持久缓存契约

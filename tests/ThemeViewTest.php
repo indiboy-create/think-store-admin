@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use think\App;
 use think\Request;
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\AssetController;
-use youvision\store\auth\Theme;
-use youvision\store\auth\ThemeController;
-use youvision\store\auth\View;
+use youvision\store\admin\AssetController;
+use youvision\store\admin\Theme;
+use youvision\store\admin\ThemeController;
+use youvision\store\admin\View;
 
 final class ThemeViewTest extends TestCase
 {
     private function app(): App
     {
         $app = new App(dirname(__DIR__));
-        $app->config->set((array) require dirname(__DIR__) . '/src/config.php', 'store_auth');
+        $app->config->set((array) require dirname(__DIR__) . '/src/config.php', 'store_admin');
 
         return $app;
     }
@@ -35,7 +35,7 @@ final class ThemeViewTest extends TestCase
         $request = (new Request())->withGet($get);
 
         if ($currentUid > 0) {
-            $request->store_auth_uid = $currentUid;
+            $request->store_admin_uid = $currentUid;
         }
 
         return $request;
@@ -46,24 +46,24 @@ final class ThemeViewTest extends TestCase
         $view = new View($this->app());
         $html = $view->render('index', [
             'title' => '权限总览',
-            'base' => '/store/think-store-auth',
-            'home' => '/store/think-store-auth/index',
-            'assets' => '/store/think-store-auth/assets',
-            'apiUser' => '/store/think-store-auth/api/user',
+            'base' => '/store/think-store-admin',
+            'home' => '/store/think-store-admin/index',
+            'assets' => '/store/think-store-admin/assets',
+            'apiUser' => '/store/think-store-admin/api/user',
             'version' => '1.0.0',
             'configs' => [['label' => '认证开关', 'value' => '已开启']],
-            'tables' => [['name' => 'store_auth_rule', 'title' => '权限规则', 'desc' => '规则说明']],
-            'routes' => [['method' => 'GET', 'path' => '/store/think-store-auth/index', 'name' => '权限总览']],
-            'meta' => [['label' => '包名', 'value' => 'youvision/think-store-auth']],
+            'tables' => [['name' => 'store_admin_rule', 'title' => '权限规则', 'desc' => '规则说明']],
+            'routes' => [['method' => 'GET', 'path' => '/store/think-store-admin/index', 'name' => '权限总览']],
+            'meta' => [['label' => '包名', 'value' => 'youvision/think-store-admin']],
             'uid' => 0,
         ]);
 
         self::assertStringContainsString('layui-layout-admin', $html);
-        self::assertStringContainsString('/store/think-store-auth/assets/layui/css/layui.css', $html);
+        self::assertStringContainsString('/store/think-store-admin/assets/layui/css/layui.css', $html);
         self::assertStringContainsString('权限总览', $html);
         self::assertStringContainsString('认证开关', $html);
-        self::assertStringContainsString('store_auth_rule', $html);
-        self::assertStringContainsString('data-api="/store/think-store-auth/api/user"', $html);
+        self::assertStringContainsString('store_admin_rule', $html);
+        self::assertStringContainsString('data-api="/store/think-store-admin/api/user"', $html);
     }
 
     public function testThemeControllerRendersResponse(): void
@@ -71,8 +71,8 @@ final class ThemeViewTest extends TestCase
         $response = $this->controller()->index($this->request(5));
 
         self::assertSame(200, $response->getCode());
-        self::assertStringContainsString('Think Store Auth', (string) $response->getContent());
-        self::assertStringContainsString('/store/think-store-auth/index', (string) $response->getContent());
+        self::assertStringContainsString('Think Store Admin', (string) $response->getContent());
+        self::assertStringContainsString('/store/think-store-admin/index', (string) $response->getContent());
         self::assertStringContainsString('data-uid="5"', (string) $response->getContent());
     }
 
@@ -140,7 +140,7 @@ final class ThemeViewTest extends TestCase
         $response = $controller->file('css/index.css');
 
         self::assertSame(200, $response->getCode());
-        self::assertStringContainsString('store-auth-brand', (string) $response->getContent());
+        self::assertStringContainsString('store-admin-brand', (string) $response->getContent());
 
         $missing = $controller->file('../config.php');
 

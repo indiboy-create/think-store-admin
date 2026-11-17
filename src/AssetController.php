@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
 use think\Response;
 

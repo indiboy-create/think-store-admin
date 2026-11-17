@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\support\SqlSplitter;
+use youvision\store\admin\support\SqlSplitter;
 
 final class SqlSplitterTest extends TestCase
 {
@@ -71,7 +71,7 @@ final class SqlSplitterTest extends TestCase
 
     public function testPackageSqlFile(): void
     {
-        $file = dirname(__DIR__) . '/src/database/store_auth.sql';
+        $file = dirname(__DIR__) . '/src/database/store_admin.sql';
         $sql = str_replace('__PREFIX__', 'think_', (string) file_get_contents($file));
         $statements = SqlSplitter::split($sql);
 
@@ -79,7 +79,7 @@ final class SqlSplitterTest extends TestCase
 
         foreach ($statements as $statement) {
             self::assertStringStartsWith('CREATE TABLE IF NOT EXISTS', $statement);
-            self::assertStringContainsString('think_store_auth_', $statement);
+            self::assertStringContainsString('think_store_admin_', $statement);
         }
     }
 }

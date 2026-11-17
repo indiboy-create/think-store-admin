@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
-use youvision\store\auth\service\Auth as AuthService;
+use youvision\store\admin\service\Auth as AuthService;
 
 /**
  * 权限认证静态入口
@@ -14,8 +14,9 @@ use youvision\store\auth\service\Auth as AuthService;
  * @method static array roles(int $uid, string $field = '')
  * @method static void flush(int $uid = 0, int $type = 0)
  * @method static int purgeUser(int $uid)
+ * @method static int verifyPassword(string $login, string $password)
  *
- * @see \youvision\store\auth\service\Auth
+ * @see \youvision\store\admin\service\Auth
  */
 class Auth
 {

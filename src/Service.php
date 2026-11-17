@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
 use think\Service as BaseService;
-use youvision\store\auth\command\Config;
-use youvision\store\auth\command\Install;
-use youvision\store\auth\command\Purge;
-use youvision\store\auth\service\Auth as AuthService;
+use youvision\store\admin\command\Config;
+use youvision\store\admin\command\Install;
+use youvision\store\admin\command\Purge;
+use youvision\store\admin\service\Auth as AuthService;
 
 /**
  * 认证服务注册入口
@@ -21,14 +21,14 @@ class Service extends BaseService
     public function register(): void
     {
         $default = require __DIR__ . '/config.php';
-        $config = array_replace_recursive($default, (array) $this->app->config->get('store_auth', []));
+        $config = array_replace_recursive($default, (array) $this->app->config->get('store_admin', []));
 
-        $this->app->config->set($config, 'store_auth');
+        $this->app->config->set($config, 'store_admin');
         $this->app->instance(AuthService::class, new AuthService($this->app));
 
         $this->app->bind(Theme::class, function () {
             return new Theme(
-                (array) $this->app->config->get('store_auth', []),
+                (array) $this->app->config->get('store_admin', []),
                 dirname(__DIR__)
             );
         });
@@ -41,15 +41,15 @@ class Service extends BaseService
      */
     public function boot(): void
     {
-        if ((bool) $this->app->config->get('store_auth.route.enabled', true)) {
-            $this->loadRoutesFrom(dirname(__DIR__) . '/route/store_auth.php');
+        if ((bool) $this->app->config->get('store_admin.route.enabled', true)) {
+            $this->loadRoutesFrom(dirname(__DIR__) . '/route/store_admin.php');
         }
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                'store:auth:config' => Config::class,
-                'store:auth:install' => Install::class,
-                'store:auth:purge' => Purge::class,
+                'store:admin:config' => Config::class,
+                'store:admin:install' => Install::class,
+                'store:admin:purge' => Purge::class,
             ]);
         }
     }

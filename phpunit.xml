@@ -7,7 +7,7 @@
          failOnWarning="true"
          failOnRisky="true">
     <testsuites>
-        <testsuite name="think-store-auth">
+        <testsuite name="think-store-admin">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

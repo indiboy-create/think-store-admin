@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\service;
+namespace youvision\store\admin\service;
 
 use think\App;
 use think\Request;
-use youvision\store\auth\contract\Repository;
-use youvision\store\auth\contract\Store;
-use youvision\store\auth\repository\DatabaseRepository;
-use youvision\store\auth\store\CacheStore;
-use youvision\store\auth\store\NullStore;
-use youvision\store\auth\store\SessionStore;
-use youvision\store\auth\support\ConditionEvaluator;
-use youvision\store\auth\support\RuleMatcher;
+use youvision\store\admin\contract\Repository;
+use youvision\store\admin\contract\Store;
+use youvision\store\admin\repository\DatabaseRepository;
+use youvision\store\admin\store\CacheStore;
+use youvision\store\admin\store\NullStore;
+use youvision\store\admin\store\SessionStore;
+use youvision\store\admin\support\ConditionEvaluator;
+use youvision\store\admin\support\RuleMatcher;
+use youvision\store\admin\support\Salting;
 
 /**
  * 权限认证核心服务
@@ -45,7 +46,7 @@ class Auth
         $this->app = $app;
         $this->config = array_replace_recursive(
             require dirname(__DIR__) . '/config.php',
-            (array) $app->config->get('store_auth', [])
+            (array) $app->config->get('store_admin', [])
         );
         $this->repository = $repository ?? new DatabaseRepository($app, $this->config);
         $this->store = $store ?? $this->createStore();
@@ -111,6 +112,50 @@ class Auth
     public function roles(int $uid, string $field = ''): array
     {
         return $this->repository->roles($uid, $field);
+    }
+
+    /**
+     * 校验用户名、邮箱或手机号与密码
+     *
+     * 成功返回用户 ID，失败返回 0。用户表字段通过 auth_user_fields 映射，
+     * 密码算法兼容 think-salting 的 AdminPassword。
+     */
+    public function verifyPassword(string $login, string $password): int
+    {
+        $login = trim($login);
+
+        if ($login === '' || $password === '' || !method_exists($this->repository, 'findByLogin')) {
+            return 0;
+        }
+
+        $user = (array) $this->repository->findByLogin($login);
+
+        if ($user === []) {
+            return 0;
+        }
+
+        $fields = (array) ($this->config['auth_user_fields'] ?? []);
+        $passwordField = (string) ($fields['password'] ?? 'password');
+        $saltField = (string) ($fields['salt'] ?? ($this->config['salting']['salt_field'] ?? 'salt'));
+        $salt2Field = (string) ($fields['salt2'] ?? ($this->config['salting']['salt2_field'] ?? 'salt2'));
+        $hash = (string) ($user[$passwordField] ?? '');
+
+        if ($hash === '') {
+            return 0;
+        }
+
+        if (!Salting::verify(
+            $password,
+            (string) ($user[$saltField] ?? ''),
+            (string) ($user[$salt2Field] ?? ''),
+            $hash
+        )) {
+            return 0;
+        }
+
+        $pk = (string) ($this->config['auth_user_pk'] ?? 'id');
+
+        return (int) ($user[$pk] ?? 0);
     }
 
     /**
@@ -346,10 +391,10 @@ class Auth
 
         if ($fingerprint !== $this->requestFingerprint) {
             $this->requestFingerprint = $fingerprint;
-            $request->store_auth_list = [];
+            $request->store_admin_list = [];
         }
 
-        $cache = $request->middleware('store_auth_list', []);
+        $cache = $request->middleware('store_admin_list', []);
 
         return is_array($cache) ? $cache : [];
     }
@@ -366,7 +411,7 @@ class Auth
         $request = $this->currentRequest();
 
         if ($request !== null) {
-            $request->store_auth_list = $cache;
+            $request->store_admin_list = $cache;
         }
     }
 

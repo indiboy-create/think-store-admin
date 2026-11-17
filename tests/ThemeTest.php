@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\Theme;
+use youvision\store\admin\Theme;
 
 final class ThemeTest extends TestCase
 {
@@ -18,10 +18,10 @@ final class ThemeTest extends TestCase
     {
         $theme = $this->theme();
 
-        self::assertSame('/store/think-store-auth', $theme->base());
-        self::assertSame('/store/think-store-auth/index', $theme->home());
-        self::assertSame('/store/think-store-auth/assets', $theme->assets());
-        self::assertSame('/store/think-store-auth/api/user', $theme->apiUser());
+        self::assertSame('/store/think-store-admin', $theme->base());
+        self::assertSame('/store/think-store-admin/index', $theme->home());
+        self::assertSame('/store/think-store-admin/assets', $theme->assets());
+        self::assertSame('/store/think-store-admin/api/user', $theme->apiUser());
         self::assertSame(0, $theme->themeUser());
     }
 
@@ -95,17 +95,17 @@ final class ThemeTest extends TestCase
         $theme = $this->theme();
 
         self::assertCount(4, $theme->tables());
-        self::assertSame('store_auth_rule', $theme->tables()[0]['name']);
+        self::assertSame('store_admin_rule', $theme->tables()[0]['name']);
         self::assertCount(3, $theme->routes());
-        self::assertSame('/store/think-store-auth/index', $theme->routes()[0]['path']);
-        self::assertSame('/store/think-store-auth/assets/<path>', $theme->routes()[2]['path']);
+        self::assertSame('/store/think-store-admin/index', $theme->routes()[0]['path']);
+        self::assertSame('/store/think-store-admin/assets/<path>', $theme->routes()[2]['path']);
     }
 
     public function testMetaAndVersion(): void
     {
         $theme = $this->theme();
 
-        self::assertSame('youvision/think-store-auth', $theme->meta()[0]['value']);
+        self::assertSame('youvision/think-store-admin', $theme->meta()[0]['value']);
         self::assertNotSame('', $theme->version());
     }
 }

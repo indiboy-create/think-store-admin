@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\model;
+namespace youvision\store\admin\model;
 
 use think\Model;
-use youvision\store\auth\support\CacheFlusher;
+use youvision\store\admin\support\CacheFlusher;
 
 /**
  * 权限规则
@@ -19,7 +19,7 @@ use youvision\store\auth\support\CacheFlusher;
  */
 class Rule extends Model
 {
-    protected $name = 'store_auth_rule';
+    protected $name = 'store_admin_rule';
 
     protected $pk = 'id';
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth;
+namespace youvision\store\admin;
 
 use think\Request;
 use think\Response;
-use youvision\store\auth\service\Auth as AuthService;
+use youvision\store\admin\service\Auth as AuthService;
 
 /**
  * 权限总览主题控制器
@@ -19,7 +19,7 @@ class ThemeController
 
     public function index(Request $request): Response
     {
-        $currentUid = (int) $request->middleware('store_auth_uid', 0);
+        $currentUid = (int) $request->middleware('store_admin_uid', 0);
         $uid = $this->theme->themeUser() ?: $currentUid;
 
         $html = $this->view->render('index', [
@@ -51,7 +51,7 @@ class ThemeController
         }
 
         if ($this->theme->accessMode() !== 'public') {
-            $currentUid = (int) $request->middleware('store_auth_uid', 0);
+            $currentUid = (int) $request->middleware('store_admin_uid', 0);
 
             if ($currentUid <= 0) {
                 return Response::create(['code' => 403, 'msg' => '请先登录后再查询权限'], 'json', 403);

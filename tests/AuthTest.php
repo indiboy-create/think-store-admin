@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use think\App;
 use think\Request;
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\contract\Store;
-use youvision\store\auth\service\Auth;
-use youvision\store\auth\tests\Support\FakeRepository;
-use youvision\store\auth\tests\Support\MemoryStore;
+use youvision\store\admin\contract\Store;
+use youvision\store\admin\service\Auth;
+use youvision\store\admin\tests\Support\FakeRepository;
+use youvision\store\admin\tests\Support\MemoryStore;
 
 final class AuthTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class AuthTest extends TestCase
         $app = new App(dirname(__DIR__));
         $app->config->set(
             array_merge((array) require dirname(__DIR__) . '/src/config.php', $config),
-            'store_auth'
+            'store_admin'
         );
 
         $request = (new Request())->withGet($get);
@@ -148,8 +148,8 @@ final class AuthTest extends TestCase
         self::assertTrue($auth->check('user/index', 1));
         self::assertSame(1, $repository->ruleCalls);
         self::assertSame(1, $repository->userCalls);
-        self::assertSame(['user/index'], $store->data['store_auth:list:1:1']['rules']);
-        self::assertSame([], $store->data['store_auth:list:1:1']['signature']);
+        self::assertSame(['user/index'], $store->data['store_admin:list:1:1']['rules']);
+        self::assertSame([], $store->data['store_admin:list:1:1']['signature']);
 
         unset($auth);
         $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
@@ -167,7 +167,7 @@ final class AuthTest extends TestCase
     {
         $repository = new FakeRepository();
         $store = new MemoryStore();
-        $store->put('store_auth:list:1:1', [
+        $store->put('store_admin:list:1:1', [
             'rules' => ['cached/rule'],
             'signature' => [],
         ]);
@@ -215,7 +215,7 @@ final class AuthTest extends TestCase
         self::assertFalse($auth->check('grade2', 1));
         self::assertSame(1, $repository->ruleCalls);
         self::assertSame(1, $repository->userCalls);
-        self::assertArrayHasKey('score', $store->data['store_auth:list:1:1']['signature']);
+        self::assertArrayHasKey('score', $store->data['store_admin:list:1:1']['signature']);
 
         unset($auth);
         $repository->users = [1 => ['id' => 1, 'score' => 150]];
@@ -224,7 +224,7 @@ final class AuthTest extends TestCase
         self::assertTrue($auth->check('grade2', 1));
         self::assertSame(2, $repository->ruleCalls);
         self::assertSame(2, $repository->userCalls);
-        self::assertSame(['grade2'], $store->data['store_auth:list:1:1']['rules']);
+        self::assertSame(['grade2'], $store->data['store_admin:list:1:1']['rules']);
 
         unset($auth);
         $auth = $this->makeAuth(['auth_type' => 2], $repository, $store);
@@ -259,11 +259,11 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
 
         $app = new App(dirname(__DIR__));
-        $app->config->set((array) require dirname(__DIR__) . '/src/config.php', 'store_auth');
+        $app->config->set((array) require dirname(__DIR__) . '/src/config.php', 'store_admin');
 
         $request = (new Request())->withGet([])->withServer([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/store/think-store-auth/index',
+            'REQUEST_URI' => '/store/think-store-admin/index',
         ]);
         $app->instance('request', $request);
         $app->instance(Request::class, $request);
@@ -282,7 +282,7 @@ final class AuthTest extends TestCase
         // 模拟常驻内存环境下的下一个请求
         $auth->useRequest((new Request())->withGet([])->withServer([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/store/think-store-auth/index',
+            'REQUEST_URI' => '/store/think-store-admin/index',
         ]));
 
         self::assertFalse($auth->check('user/index', 1));
@@ -299,11 +299,11 @@ final class AuthTest extends TestCase
         $app->config->set(array_replace(
             (array) require dirname(__DIR__) . '/src/config.php',
             ['auth_request_cache' => false]
-        ), 'store_auth');
+        ), 'store_admin');
 
         $request = (new Request())->withGet([])->withServer([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/store/think-store-auth/index',
+            'REQUEST_URI' => '/store/think-store-admin/index',
         ]);
         $app->instance('request', $request);
         $app->instance(Request::class, $request);

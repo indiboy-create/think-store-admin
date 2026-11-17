@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\support;
+namespace youvision\store\admin\support;
 
 /**
  * 条件表达式解析器

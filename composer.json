@@ -1,5 +1,5 @@
 {
-    "name": "youvision/think-store-auth",
+    "name": "youvision/think-store-admin",
     "description": "Role based access control (RBAC) extension for ThinkPHP 8, powering store admin permission management.",
     "type": "library",
     "license": "Apache-2.0",
@@ -13,7 +13,7 @@
         "store"
     ],
     "require": {
-        "php": "^8.0",
+        "php": ">=8.2",
         "topthink/framework": "^8.0",
         "topthink/think-view": "^2.0"
     },
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "youvision\\store\\auth\\": "src/"
+            "youvision\\store\\admin\\": "src/"
         },
         "files": [
             "src/helper.php"
@@ -30,20 +30,20 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "youvision\\store\\auth\\tests\\": "tests/"
+            "youvision\\store\\admin\\tests\\": "tests/"
         }
     },
     "extra": {
         "think": {
             "services": [
-                "youvision\\store\\auth\\Service"
+                "youvision\\store\\admin\\Service"
             ],
             "config": {
-                "store_auth": "src/config.php"
+                "store_admin": "src/config.php"
             }
         },
         "store": {
-            "home": "/store/think-store-auth/index"
+            "home": "/store/think-store-admin/index"
         }
     },
     "config": {

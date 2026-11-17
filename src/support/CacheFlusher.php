@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\support;
+namespace youvision\store\admin\support;
 
-use youvision\store\auth\Auth;
+use youvision\store\admin\Auth;
 
 /**
  * 在授权数据变化后清理认证缓存

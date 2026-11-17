@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\auth\tests;
+namespace youvision\store\admin\tests;
 
 use Closure;
 use think\App;
 use think\Request;
 use think\Response;
 use PHPUnit\Framework\TestCase;
-use youvision\store\auth\middleware\AuthCheck;
+use youvision\store\admin\middleware\AuthCheck;
 
 final class MiddlewareTest extends TestCase
 {
@@ -19,7 +19,7 @@ final class MiddlewareTest extends TestCase
     private function middleware(array $config = []): TestableAuthCheck
     {
         $app = new App(dirname(__DIR__));
-        $app->config->set($config, 'store_auth');
+        $app->config->set($config, 'store_admin');
 
         return new TestableAuthCheck($app);
     }

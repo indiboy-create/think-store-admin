@@ -9,7 +9,7 @@ use think\Request;
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\AssetController;
 use youvision\store\admin\Theme;
-use youvision\store\admin\ThemeController;
+use youvision\store\admin\controller\ThemeController;
 use youvision\store\admin\View;
 
 final class ThemeViewTest extends TestCase
@@ -59,11 +59,11 @@ final class ThemeViewTest extends TestCase
         ]);
 
         self::assertStringContainsString('layui-layout-admin', $html);
-        self::assertStringContainsString('/store/think-store-admin/assets/component/layui/css/layui.css', $html);
-        self::assertStringContainsString('权限总览', $html);
-        self::assertStringContainsString('认证开关', $html);
-        self::assertStringContainsString('store_admin_rule', $html);
-        self::assertStringContainsString('data-api="/store/think-store-admin/api/user"', $html);
+        self::assertStringContainsString('/store/think-store-admin/assets/component/pear/css/pear.css', $html);
+        self::assertStringContainsString('/store/think-store-admin/assets/admin/css/admin.css', $html);
+        self::assertStringContainsString('/store/think-store-admin/assets/component/layui/layui.js', $html);
+        self::assertStringContainsString('/store/think-store-admin/init', $html);
+        self::assertStringContainsString('pear-admin', $html);
     }
 
     public function testThemeControllerRendersResponse(): void
@@ -71,9 +71,8 @@ final class ThemeViewTest extends TestCase
         $response = $this->controller()->index($this->request(5));
 
         self::assertSame(200, $response->getCode());
-        self::assertStringContainsString('Think Store Admin', (string) $response->getContent());
-        self::assertStringContainsString('/store/think-store-admin/index', (string) $response->getContent());
-        self::assertStringContainsString('data-uid="5"', (string) $response->getContent());
+        self::assertStringContainsString('/store/think-store-admin/assets/component/pear/css/pear.css', (string) $response->getContent());
+        self::assertStringContainsString('layui-layout-admin', (string) $response->getContent());
     }
 
     public function testThemeControllerUsesConfiguredThemeUser(): void
@@ -83,9 +82,11 @@ final class ThemeViewTest extends TestCase
             ['theme_user' => 8]
         ), dirname(__DIR__));
 
+        self::assertSame(8, $theme->themeUser());
+
         $response = $this->controller($theme)->index($this->request(5));
 
-        self::assertStringContainsString('data-uid="8"', (string) $response->getContent());
+        self::assertSame(200, $response->getCode());
     }
 
     public function testThemeUserEndpointRejectsInvalidUid(): void

@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 use think\facade\Route;
 use youvision\store\admin\AssetController;
-use youvision\store\admin\ThemeController;
+use youvision\store\admin\controller\Home;
+use youvision\store\admin\controller\Index;
+use youvision\store\admin\controller\Init;
+use youvision\store\admin\controller\Menu;
+use youvision\store\admin\controller\Passport;
+use youvision\store\admin\controller\ThemeController;
 use youvision\store\admin\controller\UploadController;
+use youvision\store\admin\controller\admin\Index as AdminIndex;
 use youvision\store\admin\middleware\JwtAuth;
 use youvision\store\admin\middleware\ThemeAccess;
 
@@ -31,9 +37,31 @@ $middleware = array_values(array_unique(array_merge(
 $register = static function () use ($segment): void {
     $base = $segment === '' ? '' : $segment . '/';
 
-    Route::get($base . 'index', [ThemeController::class, 'index'])
-        ->name('store_admin.index')
+    $pages = [
+        'index' => ['get', Index::class, 'index'],
+        'admin' => ['get', AdminIndex::class, 'index'],
+        'home' => ['get', Home::class, 'index'],
+        'menu' => ['get', Menu::class, 'index'],
+        'init' => ['get', Init::class, 'index'],
+        'passport/login' => ['*', Passport::class, 'login'],
+        'passport/logout' => ['*', Passport::class, 'logout'],
+    ];
+
+    Route::get($segment === '' ? '/' : $segment, [Index::class, 'index'])
+        ->name('store_admin.root')
         ->completeMatch();
+
+    if ($segment !== '') {
+        Route::get($segment . '/', [Index::class, 'index'])
+            ->name('store_admin.root.slash')
+            ->completeMatch();
+    }
+
+    foreach ($pages as $path => [$method, $controller, $action]) {
+        Route::rule($base . $path, [$controller, $action], $method === '*' ? '*' : strtoupper($method))
+            ->name('store_admin.' . str_replace('/', '.', $path))
+            ->completeMatch();
+    }
 
     // JSON 接口统一挂在 api 段下，与页面路由区分
     Route::get($base . 'api/user', [ThemeController::class, 'user'])

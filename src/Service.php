@@ -9,6 +9,7 @@ use youvision\store\admin\command\Config;
 use youvision\store\admin\command\Install;
 use youvision\store\admin\command\Purge;
 use youvision\store\admin\service\Auth as AuthService;
+use youvision\store\admin\support\url\Url;
 
 /**
  * 认证服务注册入口
@@ -34,6 +35,10 @@ class Service extends BaseService
         });
 
         $this->app->instance(View::class, new View($this->app));
+
+        $this->app->bind(Url::class, function () {
+            return new Url($this->app->make(Theme::class));
+        });
     }
 
     /**

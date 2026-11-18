@@ -821,11 +821,12 @@ src/
 ├── Jwt.php                 JWT 静态入口
 ├── Service.php             服务注册与主题路由加载
 ├── Theme.php               主题地址与页面元数据
-├── ThemeController.php     权限总览页与查询接口
+
 ├── View.php                包内模板渲染器
 ├── config/
 │   └── store_admin.php     默认配置
 ├── controller/
+│   ├── ThemeController.php 权限总览页与查询接口
 │   └── UploadController.php Layui 上传接口
 ├── helper.php              全局函数
 ├── command/

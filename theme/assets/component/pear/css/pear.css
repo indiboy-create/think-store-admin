@@ -1,4 +1,5 @@
 @import url("../../layui/css/layui.css");
+@import url("../../layui/css/extend.css");
 @import url("module/menu.css");
 @import url("module/page.css");
 @import url("module/tabPage.css");

@@ -19,6 +19,66 @@ return [
     // 查看其他用户权限所需规则，为空表示仅允许查询当前登录用户
     'theme_permission' => '',
 
+    'init' => [
+    // 左上角 Logo 区
+        'logo' => [
+        'title' => 'Mini Admin',
+            'image' => store_admin_url('assets/admin/images/logo.png'),
+        ],
+
+        // 左侧菜单：由该接口返回菜单树（数组）
+        'menu' => [
+            'data'        => store_admin_url('menu'),
+            'method'      => 'GET',
+            'accordion'   => true,   // 是否开启手风琴模式（同层只展开一个）
+            'collapse'    => false,  // 初始是否收起全部菜单
+            'control'     => false,  // 是否显示菜单折叠/展开的开关按钮
+            'controlWidth' => 500,   // 收起后的侧栏宽度
+            'select'      => 'home-1',   // 默认选中的菜单 id（与 tab.index.id 对应）
+            'async'       => true,   // 是否异步加载菜单数据
+        ],
+
+        // 多标签页
+        'tab' => [
+            'enable'    => true,    // 是否开启多标签页
+            'keepState' => true,    // 切换标签时保留各页面状态
+            'session'   => true,    // 标签页存入 session，刷新后恢复
+            'preload'   => false,   // 是否预加载全部标签页
+            'max'       => '30',    // 最多同时打开的标签数量
+            'index'     => [
+                'id'    => 'home-1',
+                'type'  => '_iframe',
+                'href'  => store_admin_url('home'),
+                'title' => '首页',
+            ],
+        ],
+
+        // 主题
+        'theme' => [
+            'defaultColor'  => '2',          // 默认主色 id，对应 colors 数组里的 id
+            'defaultMenu'   => 'dark-theme', // 侧栏默认深色主题
+            'defaultHeader' => 'light-theme',// 顶栏默认浅色主题
+            'allowCustom'   => true,         // 是否允许用户自定义主题
+            'banner'        => false,        // 是否显示横条装饰
+        ],
+
+        // 可选主色（id 为字符串，与 theme.defaultColor 类型保持一致）
+        'colors' => [
+            ['id' => '1', 'color' => '#2d8cf0', 'second' => '#ecf5ff'],
+            ['id' => '2', 'color' => '#36b368', 'second' => '#f0f9eb'],
+            ['id' => '3', 'color' => '#f6ad55', 'second' => '#fdf6ec'],
+            ['id' => '4', 'color' => '#f56c6c', 'second' => '#fef0f0'],
+            ['id' => '5', 'color' => '#3963bc', 'second' => '#ecf5ff'],
+        ],
+
+        // 其他
+        'other' => [
+            'keepLoad' => '1200', // loading 动画的最短停留时间（毫秒）
+            'autoHead' => false,  // 是否自动计算内容区高度
+            'footer'   => false,  // 是否显示底部版权栏
+        ],
+    ],
+
     // 认证与 RBAC 配置
     'auth' => [
         // 权限认证总开关：1 开启，0 关闭。关闭后 check() 一律返回 true

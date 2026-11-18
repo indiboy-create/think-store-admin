@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\controller;
 
 use think\Request;
 use think\Response;
+use youvision\store\admin\Theme;
+use youvision\store\admin\View;
 use youvision\store\admin\service\Auth as AuthService;
 
 /**

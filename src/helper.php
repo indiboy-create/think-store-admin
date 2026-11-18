@@ -2,9 +2,75 @@
 
 declare(strict_types=1);
 
+use think\Response;
 use youvision\store\admin\Auth;
 use youvision\store\admin\Jwt;
+use youvision\store\admin\Theme;
+use youvision\store\admin\View;
 use youvision\store\admin\support\admin\Salting;
+use youvision\store\admin\support\url\Url;
+
+if (!function_exists('youvision')) {
+    /**
+     * 渲染包内模板并返回 HTML 响应
+     *
+     * 模板名为空时按调用方控制器与方法定位，例如 admin\Index::index 对应
+     * admin/index；单段模板名自动补调用方所在子目录。assets 变量自动注入，
+     * 调用方传入时优先。
+     *
+     * @param array<string, mixed> $vars
+     */
+    function youvision(string $template = '', array $vars = [], int $code = 200): Response
+    {
+        if ($template === '' || !str_contains($template, '/')) {
+            $prefix = 'youvision\\store\\admin\\controller\\';
+
+            foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 6) as $frame) {
+                $class = (string) ($frame['class'] ?? '');
+
+                if (!str_starts_with($class, $prefix)) {
+                    continue;
+                }
+
+                $relative = substr($class, strlen($prefix));
+
+                if ($relative === 'Controller') {
+                    continue;
+                }
+
+                $dir = str_replace('\\', '/', dirname($relative));
+                $name = $template === '' ? (string) ($frame['function'] ?? '') : $template;
+
+                if ($name !== '') {
+                    $template = $dir === '.' || $dir === '' ? $name : $dir . '/' . $name;
+                }
+
+                break;
+            }
+        }
+
+        $template = $template === '' ? 'index' : $template;
+        $vars = ['assets' => app(Theme::class)->assets()] + $vars;
+
+        return Response::create(
+            app(View::class)->render($template, $vars),
+            'html',
+            $code
+        );
+    }
+}
+
+if (!function_exists('store_admin_url')) {
+    /**
+     * 生成包内链接
+     *
+     * @param array<string, mixed> $params
+     */
+    function store_admin_url(string $path = '', array $params = [], bool $absolute = false): string
+    {
+        return app(Url::class)->to($path, $params, $absolute);
+    }
+}
 
 if (!function_exists('store_admin_check')) {
     /**

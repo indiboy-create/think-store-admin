@@ -1,257 +1,122 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{$title} - Think Store Admin</title>
-<meta name="description" content="Think Store Admin 权限认证总览：规则、角色、用户关系与运行配置。">
-<link rel="stylesheet" href="{$assets}/component/layui/css/layui.css">
-<link rel="stylesheet" href="{$assets}/doc/css/index.css">
-</head>
-<body class="layui-layout layui-layout-admin store-admin-page">
-<div class="layui-header">
-    <a class="layui-logo store-admin-logo" href="{$home}">
-        <i class="layui-icon layui-icon-vercode"></i>
-        <span>Think Store Admin</span>
-    </a>
-    <ul class="layui-nav layui-layout-left">
-        <li class="layui-nav-item"><a href="{$home}">权限总览</a></li>
-        <li class="layui-nav-item"><a href="#store-admin-query">用户查询</a></li>
-        <li class="layui-nav-item"><a href="#store-admin-config">运行配置</a></li>
-        <li class="layui-nav-item"><a href="#store-admin-tables">数据表</a></li>
-    </ul>
-    <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item">
-            <a href="{$apiUser}?uid=1" target="_blank" rel="noopener">
-                <i class="layui-icon layui-icon-link"></i> 查询接口
-            </a>
-        </li>
-        <li class="layui-nav-item">
-            <a href="https://github.com/indiboy-create/think-store-admin" target="_blank" rel="noopener">
-                <i class="layui-icon layui-icon-github"></i> GitHub
-            </a>
-        </li>
-    </ul>
-</div>
+<!doctype html>
+<html>
+	<head>
+		<title>LayuiAdmin-Iframe</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+		<link rel="stylesheet" href="{$assets}/component/pear/css/pear.css" />
+		<link rel="stylesheet" href="{$assets}/admin/css/admin.css" />
+		<link rel="stylesheet" href="{$assets}/admin/css/variables.css" />
+		<link rel="stylesheet" href="{$assets}/admin/css/reset.css" />
+	</head>
+	<!-- 结 构 代 码 -->
 
-<div class="layui-side layui-bg-black">
-    <div class="layui-side-scroll">
-        <ul class="layui-nav layui-nav-tree" lay-filter="store-admin-nav">
-            <li class="layui-nav-item layui-this">
-                <a href="{$home}"><i class="layui-icon layui-icon-home"></i> 权限总览</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="#store-admin-query"><i class="layui-icon layui-icon-user"></i> 用户权限查询</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="#store-admin-config"><i class="layui-icon layui-icon-set"></i> 运行配置</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="#store-admin-tables"><i class="layui-icon layui-icon-table"></i> 数据表</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="#store-admin-routes"><i class="layui-icon layui-icon-link"></i> 路由与接口</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="#store-admin-meta"><i class="layui-icon layui-icon-about"></i> 包信息</a>
-            </li>
-        </ul>
-    </div>
-</div>
+	<body class="layui-layout-body pear-admin">
+		<!-- 布 局 框 架 -->
+		<div class="layui-layout layui-layout-admin">
+			<!-- 顶 部 样 式 -->
+			<div class="layui-header">
+				<!-- 菜 单 顶 部 -->
+				<div class="layui-logo">
+					<!-- 图 标 -->
+					<img class="logo" />
+					<!-- 标 题 -->
+					<span class="title"></span>
+				</div>
+				<!-- 顶 部 左 侧 功 能 -->
+				<ul class="layui-nav layui-layout-left">
+					<li class="collapse layui-nav-item">
+						<a href="#" class="layui-icon layui-icon-shrink-right"></a>
+					</li>
+					<li class="refresh layui-nav-item">
+						<a href="#" class="layui-icon layui-icon-refresh-1" loading="600"></a>
+					</li>
+				</ul>
+				<!-- 多 系 统 菜 单 -->
+				<div id="control" class="layui-layout-control"></div>
+				<!-- 顶 部 右 侧 菜 单 -->
+				<ul class="layui-nav layui-layout-right">
+					<li class="layui-nav-item layui-hide-xs">
+						<a href="#" class="fullScreen layui-icon layui-icon-screen-full"></a>
+					</li>
+					<li class="layui-nav-item user">
+						<!-- 头 像 -->
+						<a class="layui-icon layui-icon-username" href="javascript:;"></a>
+						<!-- 功 能 菜 单 -->
+						<dl class="layui-nav-child">
+							<dd>
+								<a
+									user-menu-url="layui.html"
+									user-menu-id="5555"
+									user-menu-title="基本资料"
+									>基本资料</a
+								>
+							</dd>
+							<dd><a href="javascript:void(0);" class="logout">注销登录</a></dd>
+						</dl>
+					</li>
+					<!-- 主 题 配 置 -->
+					<li class="layui-nav-item setting">
+						<a href="#" class="layui-icon layui-icon-more-vertical"></a>
+					</li>
+				</ul>
+			</div>
+			<!-- 侧 边 区 域 -->
+			<div class="layui-side layui-bg-black">
+				<!-- 菜 单 顶 部 -->
+				<div class="layui-logo">
+					<!-- 图 标 -->
+					<img class="logo" />
+					<!-- 标 题 -->
+					<span class="title"></span>
+				</div>
+				<!-- 菜 单 内 容 -->
+				<div class="layui-side-scroll">
+					<div id="side"></div>
+				</div>
+			</div>
+			<!-- 视 图 页 面 -->
+			<div class="layui-body">
+				<!-- 内 容 页 面 -->
+				<div id="content"></div>
+			</div>
+			<!-- 页脚 -->
+			<div class="layui-footer layui-text"></div>
+			<!-- 遮 盖 层 -->
+			<div class="pear-cover"></div>
+			<!-- 加 载 动 画 -->
+			<div class="loader-wrapper">
+				<!-- 动 画 对 象 -->
+				<div class="loader"></div>
+			</div>
+		</div>
+		<!-- 移 动 端 便 捷 操 作 -->
+		<div class="pear-collapsed-pe collapse">
+			<a href="#" class="layui-icon layui-icon-shrink-right"></a>
+		</div>
+		<!-- 依 赖 脚 本 -->
+		<script src="{$assets}/component/layui/layui.js"></script>
+		<script src="{$assets}/component/pear/pear.js"></script>
+		<!-- 框 架 初 始 化 -->
+		<script>
+			layui.use(['admin', 'jquery'], function () {
+				var admin = layui.admin;
+				var $ = layui.jquery;
 
-<div class="layui-body">
-    <main class="store-admin-main" data-base="{$base}" data-api="{$apiUser}" data-uid="{$uid}">
-        <div class="layui-card store-admin-hero">
-            <div class="layui-card-body">
-                <span class="store-admin-eyebrow">youvision/think-store-admin · {$version}</span>
-                <h1 class="store-admin-title">权限认证总览</h1>
-                <p class="store-admin-desc">
-                    查看规则、角色、用户关系与当前配置。页面由包内 View 渲染，layui 静态资源通过 assets 路由输出，
-                    无需发布到宿主 public 目录。
-                </p>
-                <div class="store-admin-hero__meta">
-                    <span class="layui-badge layui-bg-green">认证服务已注册</span>
-                    <span class="layui-badge layui-bg-cyan">layui 2.13.9</span>
-                    <span class="layui-badge layui-bg-gray">只读总览</span>
-                </div>
-            </div>
-        </div>
+				// json | api
+				admin.setConfigurationPath("{:store_admin_url('init')}");
 
-        <div class="layui-row layui-col-space15 store-admin-stats">
-            <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-admin-stat">
-                    <span class="store-admin-stat__num">4</span>
-                    <span class="store-admin-stat__label">认证数据表</span>
-                </div>
-            </div>
-            <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-admin-stat">
-                    <span class="store-admin-stat__num">3</span>
-                    <span class="store-admin-stat__label">主题路由</span>
-                </div>
-            </div>
-            <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-admin-stat">
-                    <span class="store-admin-stat__num">2</span>
-                    <span class="store-admin-stat__label">CLI 命令</span>
-                </div>
-            </div>
-            <div class="layui-col-xs6 layui-col-md3">
-                <div class="store-admin-stat">
-                    <span class="store-admin-stat__num">RBAC</span>
-                    <span class="store-admin-stat__label">规则 / 角色授权模型</span>
-                </div>
-            </div>
-        </div>
+				// 渲染
+				admin.render();
 
-        <div class="layui-card" id="store-admin-query">
-            <div class="layui-card-header">
-                用户权限查询
-                <span class="store-admin-hint">只读</span>
-            </div>
-            <div class="layui-card-body">
-                <blockquote class="layui-elem-quote layui-quote-nm">
-                    默认仅可查询当前登录用户。需要查看其他用户时，请在 config/store_admin.php 配置
-                    theme_permission，并由拥有该规则的用户操作。该页面不修改任何权限数据。
-                </blockquote>
-                <form class="layui-form" lay-filter="store-admin-form">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">用户 ID</label>
-                        <div class="layui-input-inline store-admin-uid">
-                            <input type="number" name="uid" min="1" value="{$uid}" autocomplete="off"
-                                   placeholder="请输入用户 ID" class="layui-input" lay-verify="required|number">
-                        </div>
-                        <div class="layui-input-inline store-admin-submit">
-                            <button type="submit" class="layui-btn" lay-submit lay-filter="store-admin-query">
-                                <i class="layui-icon layui-icon-search"></i> 查询权限
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div class="layui-row layui-col-space15">
-                    <div class="layui-col-md6">
-                        <div class="store-admin-table-title">
-                            可用规则
-                            <span id="store-admin-rule-count" class="layui-badge layui-bg-gray">0</span>
-                        </div>
-                        <table id="store-admin-rules" lay-filter="store-admin-rules"></table>
-                    </div>
-                    <div class="layui-col-md6">
-                        <div class="store-admin-table-title">
-                            所属角色
-                            <span id="store-admin-role-count" class="layui-badge layui-bg-gray">0</span>
-                        </div>
-                        <table id="store-admin-roles" lay-filter="store-admin-roles"></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-card" id="store-admin-config">
-            <div class="layui-card-header">运行配置</div>
-            <div class="layui-card-body">
-                <table class="layui-table" lay-skin="line" lay-size="sm">
-                    <colgroup>
-                        <col width="180">
-                        <col>
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>配置项</th>
-                        <th>当前值</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {volist name="configs" id="item"}
-                    <tr>
-                        <td>{$item.label}</td>
-                        <td><span class="store-admin-value">{$item.value}</span></td>
-                    </tr>
-                    {/volist}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="layui-card" id="store-admin-tables">
-            <div class="layui-card-header">认证数据表</div>
-            <div class="layui-card-body">
-                <div class="layui-row layui-col-space15">
-                    {volist name="tables" id="item"}
-                    <div class="layui-col-md6">
-                        <div class="store-admin-table-item">
-                            <code>{$item.name}</code>
-                            <strong>{$item.title}</strong>
-                            <span>{$item.desc}</span>
-                        </div>
-                    </div>
-                    {/volist}
-                </div>
-                <p class="store-admin-tip">
-                    表名会自动拼接数据库配置中的前缀。执行
-                    <code>php think store:admin:install</code>
-                    创建数据表。
-                </p>
-            </div>
-        </div>
-
-        <div class="layui-card" id="store-admin-routes">
-            <div class="layui-card-header">路由与接口</div>
-            <div class="layui-card-body">
-                <table class="layui-table" lay-skin="line" lay-size="sm">
-                    <colgroup>
-                        <col width="90">
-                        <col>
-                        <col width="180">
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>方法</th>
-                        <th>地址</th>
-                        <th>说明</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {volist name="routes" id="item"}
-                    <tr>
-                        <td><span class="layui-badge layui-bg-blue">{$item.method}</span></td>
-                        <td><code>{$item.path}</code></td>
-                        <td>{$item.name}</td>
-                    </tr>
-                    {/volist}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="layui-card" id="store-admin-meta">
-            <div class="layui-card-header">包信息</div>
-            <div class="layui-card-body">
-                <table class="layui-table" lay-skin="line" lay-size="sm">
-                    <colgroup>
-                        <col width="180">
-                        <col>
-                    </colgroup>
-                    <tbody>
-                    {volist name="meta" id="item"}
-                    <tr>
-                        <td>{$item.label}</td>
-                        <td><span class="store-admin-value">{$item.value}</span></td>
-                    </tr>
-                    {/volist}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-</div>
-
-<div class="layui-footer store-admin-footer">
-    <span>© {$version} · youvision/think-store-admin</span>
-    <span>ThinkPHP 8 · Layui 2.13.9</span>
-</div>
-
-<script src="{$assets}/component/layui/layui.js"></script>
-<script src="{$assets}/doc/js/index.js"></script>
-</body>
+				// 注销
+				admin.logout(function () {
+					// 清空 tabs 缓存
+					return new Promise((resolve) => {
+						resolve(true);
+					});
+				});
+			});
+		</script>
+	</body>
 </html>

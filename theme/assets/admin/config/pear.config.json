@@ -1,7 +1,7 @@
 {
 	"logo": {
 		"title": "Mini Admin",
-		"image": "admin/images/logo.png"
+		"image": "assets/admin/images/logo.png"
 	},
 	"menu": {
 		"data": "api/menu.json",

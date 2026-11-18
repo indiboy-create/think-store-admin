@@ -811,6 +811,7 @@ return [
 ## 目录结构
 
 ```text
+
 route/
 └── store_admin.php          主题页面、查询接口与静态资源路由
 src/
@@ -822,7 +823,8 @@ src/
 ├── Theme.php               主题地址与页面元数据
 ├── ThemeController.php     权限总览页与查询接口
 ├── View.php                包内模板渲染器
-├── config.php              默认配置
+├── config/
+│   └── store_admin.php     默认配置
 ├── controller/
 │   └── UploadController.php Layui 上传接口
 ├── helper.php              全局函数
@@ -871,11 +873,15 @@ src/
         └── LayuiUploads.php  Layui 上传接口工具
 theme/
 ├── view/
-│   └── index.html          权限总览页
+│   ├── index.html          权限总览页
+│   └── doc/
+│       └── index.html      静态文档首页
 └── assets/
-    ├── css/index.css       主题样式
-    ├── js/index.js         权限查询脚本
-    └── layui/              本地 layui 资源
+    ├── component/
+    │   └── layui/          本地 layui 资源
+    └── doc/
+        ├── css/index.css   文档与主题样式
+        └── js/index.js     权限查询脚本
 tests/                      单元测试
 ```
 

@@ -20,7 +20,7 @@ class Service extends BaseService
      */
     public function register(): void
     {
-        $default = require __DIR__ . '/config.php';
+        $default = require __DIR__ . '/config/store_admin.php';
         $config = array_replace_recursive($default, (array) $this->app->config->get('store_admin', []));
 
         $this->app->config->set($config, 'store_admin');

@@ -17,7 +17,7 @@ final class ThemeViewTest extends TestCase
     private function app(): App
     {
         $app = new App(dirname(__DIR__));
-        $app->config->set((array) require dirname(__DIR__) . '/src/config.php', 'store_admin');
+        $app->config->set((array) require dirname(__DIR__) . '/src/config/store_admin.php', 'store_admin');
 
         return $app;
     }
@@ -25,7 +25,7 @@ final class ThemeViewTest extends TestCase
     private function controller(?Theme $theme = null): ThemeController
     {
         $app = $this->app();
-        $theme ??= new Theme((array) require dirname(__DIR__) . '/src/config.php', dirname(__DIR__));
+        $theme ??= new Theme((array) require dirname(__DIR__) . '/src/config/store_admin.php', dirname(__DIR__));
 
         return new ThemeController($theme, new View($app));
     }
@@ -59,7 +59,7 @@ final class ThemeViewTest extends TestCase
         ]);
 
         self::assertStringContainsString('layui-layout-admin', $html);
-        self::assertStringContainsString('/store/think-store-admin/assets/layui/css/layui.css', $html);
+        self::assertStringContainsString('/store/think-store-admin/assets/component/layui/css/layui.css', $html);
         self::assertStringContainsString('权限总览', $html);
         self::assertStringContainsString('认证开关', $html);
         self::assertStringContainsString('store_admin_rule', $html);
@@ -79,7 +79,7 @@ final class ThemeViewTest extends TestCase
     public function testThemeControllerUsesConfiguredThemeUser(): void
     {
         $theme = new Theme(array_replace(
-            (array) require dirname(__DIR__) . '/src/config.php',
+            (array) require dirname(__DIR__) . '/src/config/store_admin.php',
             ['theme_user' => 8]
         ), dirname(__DIR__));
 
@@ -120,14 +120,14 @@ final class ThemeViewTest extends TestCase
 
     public function testAssetResolve(): void
     {
-        $file = AssetController::resolve('css/index.css');
+        $file = AssetController::resolve('doc/css/index.css');
 
         self::assertNotNull($file);
-        self::assertStringEndsWith('theme/assets/css/index.css', str_replace('\\', '/', (string) $file));
+        self::assertStringEndsWith('doc/css/index.css', str_replace('\\', '/', (string) $file));
         self::assertSame('text/css; charset=utf-8', AssetController::mime((string) $file));
 
         self::assertNull(AssetController::resolve(''));
-        self::assertNull(AssetController::resolve('../src/config.php'));
+        self::assertNull(AssetController::resolve('../src/config/store_admin.php'));
         self::assertNull(AssetController::resolve('css/missing.css'));
         self::assertSame('image/svg+xml', AssetController::mime('icon.svg'));
         self::assertSame('application/octet-stream', AssetController::mime('file.bin'));
@@ -137,7 +137,7 @@ final class ThemeViewTest extends TestCase
     {
         $controller = new AssetController();
 
-        $response = $controller->file('css/index.css');
+        $response = $controller->file('doc/css/index.css');
 
         self::assertSame(200, $response->getCode());
         self::assertStringContainsString('store-admin-brand', (string) $response->getContent());

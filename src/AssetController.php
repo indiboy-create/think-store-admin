@@ -51,15 +51,15 @@ class AssetController
      */
     public static function resolve(string $path): ?string
     {
-        $base = realpath(dirname(__DIR__) . '/theme/assets');
-
-        if ($base === false) {
-            return null;
-        }
-
         $path = str_replace('\\', '/', trim($path));
 
         if ($path === '' || strpos($path, '..') !== false || strpos($path, "\0") !== false) {
+            return null;
+        }
+
+        $base = realpath(dirname(__DIR__) . '/theme/assets');
+
+        if ($base === false) {
             return null;
         }
 

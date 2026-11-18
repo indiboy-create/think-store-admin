@@ -18,7 +18,7 @@ final class JumpTest extends TestCase
     {
         $app = new App(dirname(__DIR__));
         $app->config->set(array_replace_recursive(
-            (array) require dirname(__DIR__) . '/src/config.php',
+            (array) require dirname(__DIR__) . '/src/config/store_admin.php',
             $config
         ), 'store_admin');
 

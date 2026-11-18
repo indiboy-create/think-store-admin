@@ -11,7 +11,7 @@ final class ThemeTest extends TestCase
 {
     private function theme(array $config = []): Theme
     {
-        return new Theme(array_replace_recursive((array) require dirname(__DIR__) . '/src/config.php', $config), dirname(__DIR__));
+        return new Theme(array_replace_recursive((array) require dirname(__DIR__) . '/src/config/store_admin.php', $config), dirname(__DIR__));
     }
 
     public function testDefaultAddresses(): void

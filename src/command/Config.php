@@ -30,7 +30,7 @@ class Config extends Command
             return 0;
         }
 
-        $source = dirname(__DIR__) . '/config.php';
+        $source = dirname(__DIR__) . '/config/store_admin.php';
 
         if (!is_file($source) || file_put_contents($target, (string) file_get_contents($source)) === false) {
             $output->writeln('<error>Unable to write config file: ' . $target . '</error>');

@@ -22,7 +22,7 @@ final class LayuiUploadsTest extends TestCase
         $this->root = dirname(__DIR__) . '/runtime/test-uploads-' . bin2hex(random_bytes(4));
         $this->app = new App(dirname(__DIR__));
 
-        $config = (array) require dirname(__DIR__) . '/src/config.php';
+        $config = (array) require dirname(__DIR__) . '/src/config/store_admin.php';
         $config['upload']['disk'] = 'public';
         $config['upload']['allowed_ext'] = ['png', 'jpg', 'jpeg', 'txt'];
         $config['upload']['max_size'] = 1024;

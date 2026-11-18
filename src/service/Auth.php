@@ -45,7 +45,7 @@ class Auth
     {
         $this->app = $app;
         $this->config = array_replace_recursive(
-            require dirname(__DIR__) . '/config.php',
+            require dirname(__DIR__) . '/config/store_admin.php',
             (array) $app->config->get('store_admin', [])
         );
         $this->repository = $repository ?? new DatabaseRepository($app, $this->config);

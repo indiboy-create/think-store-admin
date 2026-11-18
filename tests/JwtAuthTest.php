@@ -16,7 +16,7 @@ final class JwtAuthTest extends TestCase
     private function app(): App
     {
         $app = new App(dirname(__DIR__));
-        $config = (array) require dirname(__DIR__) . '/src/config.php';
+        $config = (array) require dirname(__DIR__) . '/src/config/store_admin.php';
         $config['jwt']['secret'] = str_repeat('k', 32);
 
         $app->config->set($config, 'store_admin');

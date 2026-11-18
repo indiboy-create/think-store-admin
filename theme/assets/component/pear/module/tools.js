@@ -1,0 +1,1 @@
+layui.define(["jquery","element"],function(n){layui.jquery;var e=new function(){this.debounce=function(n,e){var u=null;return function(){var t=arguments[0];u&&clearTimeout(u),u=setTimeout(function(){n(t)},e)}}};n("tools",e)});

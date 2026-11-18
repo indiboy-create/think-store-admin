@@ -6,7 +6,7 @@ namespace youvision\store\admin\tests;
 
 use think\App;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\LayuiDropdown;
+use youvision\store\admin\support\layui\LayuiDropdown;
 
 final class LayuiDropdownTest extends TestCase
 {

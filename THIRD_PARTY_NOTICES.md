@@ -8,3 +8,9 @@
 - Modifications: namespace changed to `youvision\store\admin`, configuration moved to `store_admin.jump`, template path fallback, request-safe URL resolution, configurable response codes, and HTML/JSON handling adjustments.
 
 The upstream license is the Mulan Permissive Software License, Version 2 (MulanPSL-2.0). See the upstream repository for the complete license text.
+## think-enum
+
+- Source: https://github.com/yuanzhihai/think-enum
+- License: MIT
+- Ported content: the `EnumEnhance` trait behavior.
+- Modifications: namespace changed to `youvision\store\admin\support\enum`, robust localization fallback, strict `isAny` comparison, and direct case lookup for `fromName` / `fromValue`.

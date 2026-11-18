@@ -9,7 +9,7 @@ use think\Request;
 use think\file\UploadedFile;
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\controller\UploadController;
-use youvision\store\admin\support\LayuiUploads;
+use youvision\store\admin\support\layui\LayuiUploads;
 
 final class LayuiUploadsTest extends TestCase
 {

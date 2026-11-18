@@ -1,6 +1,8 @@
 <?php
 
-namespace youvision\store\admin\support;
+declare(strict_types=1);
+
+namespace youvision\store\admin\support\layui;
 
 use think\Container;
 use think\facade\Config;

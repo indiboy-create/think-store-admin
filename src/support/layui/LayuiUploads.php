@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\support;
+namespace youvision\store\admin\support\layui;
 
 use think\facade\Config;
 use think\facade\Filesystem;

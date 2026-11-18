@@ -6,7 +6,7 @@ namespace youvision\store\admin\controller;
 
 use think\Request;
 use think\Response;
-use youvision\store\admin\support\LayuiUploads;
+use youvision\store\admin\support\layui\LayuiUploads;
 
 /**
  * Layui upload 上传接口

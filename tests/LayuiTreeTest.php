@@ -6,7 +6,7 @@ namespace youvision\store\admin\tests;
 
 use think\App;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\LayuiTree;
+use youvision\store\admin\support\layui\LayuiTree;
 
 final class LayuiTreeTest extends TestCase
 {

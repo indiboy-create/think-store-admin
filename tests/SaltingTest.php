@@ -6,7 +6,7 @@ namespace youvision\store\admin\tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\Salting;
+use youvision\store\admin\support\admin\Salting;
 
 final class SaltingTest extends TestCase
 {

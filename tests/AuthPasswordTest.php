@@ -7,7 +7,7 @@ namespace youvision\store\admin\tests;
 use think\App;
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\service\Auth;
-use youvision\store\admin\support\Salting;
+use youvision\store\admin\support\admin\Salting;
 use youvision\store\admin\tests\Support\FakeRepository;
 
 final class AuthPasswordTest extends TestCase

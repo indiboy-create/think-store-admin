@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\support;
+namespace youvision\store\admin\support\admin;
 
 /**
  * 密码加盐算法，兼容 think-salting 的 AdminPassword 算法。

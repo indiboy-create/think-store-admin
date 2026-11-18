@@ -6,7 +6,7 @@ namespace youvision\store\admin\tests;
 
 use think\Collection;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\LayuiTable;
+use youvision\store\admin\support\layui\LayuiTable;
 
 final class LayuiTableTest extends TestCase
 {

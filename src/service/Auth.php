@@ -14,7 +14,7 @@ use youvision\store\admin\store\NullStore;
 use youvision\store\admin\store\SessionStore;
 use youvision\store\admin\support\ConditionEvaluator;
 use youvision\store\admin\support\RuleMatcher;
-use youvision\store\admin\support\Salting;
+use youvision\store\admin\support\admin\Salting;
 
 /**
  * 权限认证核心服务

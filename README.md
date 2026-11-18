@@ -114,7 +114,7 @@ $uid = Auth::verifyPassword('alice', 'plain-password');
 注册或重置密码时生成盐与哈希：
 
 ```php
-use youvision\store\admin\support\Salting;
+use youvision\store\admin\support\admin\Salting;
 
 $pair = Salting::makePair();
 $hash = Salting::encode($password, $pair['salt'], $pair['salt2']);
@@ -188,8 +188,8 @@ JWT 黑名单写入 ThinkPHP Cache，多 Worker/多节点部署时必须使用�
 用于把扁平数据转换为 Layui 树形组件，并封装 table 服务端响应：
 
 ```php
-use youvision\store\admin\support\LayuiTable;
-use youvision\store\admin\support\LayuiTree;
+use youvision\store\admin\support\layui\LayuiTable;
+use youvision\store\admin\support\layui\LayuiTree;
 
 $tree = (new LayuiTree())->init($list);
 
@@ -213,7 +213,7 @@ LayuiTable::columns([['field' => 'id', 'title' => 'ID']]);
 `LayuiDropdown` 生成 Layui dropdown 所需的数据与操作结果：
 
 ```php
-use youvision\store\admin\support\LayuiDropdown;
+use youvision\store\admin\support\layui\LayuiDropdown;
 
 $items = LayuiDropdown::items($tree);
 
@@ -308,7 +308,7 @@ POST /store/think-store-admin/upload
 多文件上传时，`data` 为数组；`files` 始终返回完整列表。
 
 ```php
-use youvision\store\admin\support\LayuiUploads;
+use youvision\store\admin\support\layui\LayuiUploads;
 
 $result = LayuiUploads::handle($request);      // 自动读取 request->file('file')
 $result = LayuiUploads::single($file);         // 单文件
@@ -454,6 +454,60 @@ class User extends BaseController
 | `theme_user` | `0` | 总览页默认查询的用户 ID，`0` 表示当前登录用户 |
 | `theme_access` | `auth` | 主题访问模式：`auth` 需登录，`public` 公开（仅用于本地演示） |
 | `theme_permission` | 空 | 访问主题及查询其他用户所需规则；为空表示仅允许查询当前登录用户 |
+
+## 枚举
+
+`EnumEnhance` 提供枚举名称、值、比较、实例化、数组转换和多语言描述，位于：
+
+```php
+youvision\store\admin\support\enum\EnumEnhance
+```
+
+```php
+namespace app\enums;
+
+use youvision\store\admin\support\enum\EnumEnhance;
+
+enum UserType: int
+{
+    use EnumEnhance;
+
+    case ADMINISTRATOR = 0;
+    case MODERATOR = 1;
+    case SUBSCRIBER = 2;
+}
+```
+
+常用方法：
+
+```php
+UserType::names();        // ['ADMINISTRATOR', 'MODERATOR', 'SUBSCRIBER']
+UserType::values();       // [0, 1, 2]
+UserType::hasValue(1);
+UserType::hasName('MODERATOR');
+UserType::fromName('ADMINISTRATOR');
+UserType::fromValue(0);
+UserType::guess('MODERATOR');
+UserType::toArray();
+UserType::toSelectArray();
+```
+
+语言包位置：
+
+```php
+// app/lang/zh-cn/enums.php
+use app\enums\UserType;
+
+return [
+    UserType::class => [
+        UserType::ADMINISTRATOR->value => '管理员',
+        UserType::MODERATOR->value => '监督员',
+        UserType::SUBSCRIBER->value => '订阅用户',
+    ],
+];
+```
+
+`toSelectArray()` 可直接用于 Layui 表单选项；`toArray()` 可转换为 `LayuiDropdown` 的 `id/title` 数据。该模块没有配置项，不新增数据表。
 
 ## 初始化数据表
 
@@ -804,13 +858,17 @@ src/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
     ├── Jwt.php             JWT 签发与校验
-    ├── LayuiDropdown.php   Layui dropdown 数据与重载
-    ├── LayuiTable.php      Layui table 服务端工具
-    ├── LayuiTree.php       Layui 树形结构工具
-    ├── LayuiUploads.php    Layui 上传接口工具
     ├── RuleMatcher.php
-    ├── Salting.php         密码加盐算法
-    └── SqlSplitter.php
+    ├── SqlSplitter.php
+    ├── admin/
+    │   └── Salting.php     密码加盐算法
+    ├── enum/
+    │   └── EnumEnhance.php 枚举增强 trait
+    └── layui/
+        ├── LayuiDropdown.php Layui dropdown 数据与重载
+        ├── LayuiTable.php    Layui table 服务端工具
+        ├── LayuiTree.php     Layui 树形结构工具
+        └── LayuiUploads.php  Layui 上传接口工具
 theme/
 ├── view/
 │   └── index.html          权限总览页

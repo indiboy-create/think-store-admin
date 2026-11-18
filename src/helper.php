@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use youvision\store\admin\Auth;
 use youvision\store\admin\Jwt;
-use youvision\store\admin\support\Salting;
+use youvision\store\admin\support\admin\Salting;
 
 if (!function_exists('store_admin_check')) {
     /**

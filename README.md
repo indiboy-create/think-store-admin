@@ -359,8 +359,8 @@ return [
 
 | 配置项 | 默认值 | 说明 |
 | --- | --- | --- |
-| `jump.success_tmpl` | 空 | 成功跳转模板；为空时使用包内 `theme/view/dispatch_jump.html` |
-| `jump.error_tmpl` | 空 | 失败跳转模板；为空时使用包内模板 |
+| `jump.success_tmpl` | 空 | 成功跳转模板；为空时使用包内 `theme/view/jump/default.html` |
+| `jump.error_tmpl` | 空 | 失败跳转模板；为空时使用包内 `theme/view/jump/error.html` |
 | `jump.wait` | `3` | 页面跳转等待秒数 |
 | `jump.success_code` | `1` | Ajax/JSON 成功响应码 |
 | `jump.error_code` | `0` | Ajax/JSON 失败响应码 |
@@ -439,7 +439,7 @@ class User extends BaseController
 - 四个方法都抛出 `HttpResponseException`，调用处必须 `return`，且不要在之后继续输出。
 - 控制器方法不要命名为 `success`、`error`、`result`、`redirect`。
 - 自定义模板可配置为绝对路径。
-- 该模块使用 MulanPSL-2.0 上游实现，详见 `THIRD_PARTY_NOTICES.md`。
+- 该模块基于 MulanPSL-2.0 许可的上游实现移植。
 
 ### 主题与路由
 
@@ -895,7 +895,9 @@ theme/
 │   ├── home.html           首页
 │   ├── login.html          登录页
 │   ├── layui.html          Layui 组件示例
-│   ├── dispatch_jump.html  跳转提示模板
+│   ├── jump/
+│   │   ├── default.html    成功跳转模板
+│   │   └── error.html      失败跳转模板
 │   ├── admin/
 │   │   └── index.html      后台首页
 │   └── doc/

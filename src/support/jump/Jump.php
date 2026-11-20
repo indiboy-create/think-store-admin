@@ -8,6 +8,7 @@ use think\App;
 use think\exception\HttpResponseException;
 use think\Request;
 use think\Response;
+use youvision\store\admin\support\theme\Theme;
 
 /**
  * 控制器跳转响应 trait。
@@ -134,14 +135,25 @@ trait Jump
     {
         $template = trim((string) $this->jumpConfig($type === 'success' ? 'success_tmpl' : 'error_tmpl', ''));
 
-        return $template !== '' ? $template : dirname(__DIR__, 3) . '/theme/view/dispatch_jump.html';
+        return $template !== '' ? $template : dirname(__DIR__, 3) . '/theme/view/jump/' . ($type === 'success' ? 'default' : 'error') . '.html';
+    }
+
+    protected function jumpSafeText(mixed $value): string
+    {
+        return htmlspecialchars(strip_tags(is_scalar($value) ? (string) $value : ''), ENT_QUOTES, 'UTF-8');
     }
 
     protected function dispatchJump(array $result, array $header, string $type): void
     {
         if ($this->getResponseType() === 'html') {
+            $view = $result;
+            $view['assets'] = $this->jumpApp()->make(Theme::class)->assets();
+            $view['msg'] = $this->jumpSafeText($result['msg'] ?? '');
+            $view['url'] = htmlspecialchars((string) ($result['url'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $view['wait'] = max(0, (int) ($result['wait'] ?? 0));
+
             $response = Response::create($this->jumpTemplate($type), 'view')
-                ->assign($result)
+                ->assign($view)
                 ->header($header);
         } else {
             $response = Response::create($result, 'json')->header($header);

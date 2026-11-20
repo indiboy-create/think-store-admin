@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>操作失败</title>
+    <link rel="stylesheet" href="{$assets}/component/layui/css/layui.css">
+</head>
+<body class="layui-bg-gray">
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;">
+    <div class="layui-card" style="width: 100%; max-width: 420px; border-radius: 12px; box-shadow: 0 12px 40px rgba(31, 45, 44, .08);">
+        <div class="layui-card-body" style="padding: 48px 32px 36px; text-align: center;">
+            <i class="layui-icon layui-icon-close-fill" style="font-size: 64px; color: #ff5722;"></i>
+            <h2 style="margin: 18px 0 8px; color: #1f2d2c; font-size: 20px; font-weight: 500;">操作失败</h2>
+            <p style="margin: 0; color: #5f6b7a; font-size: 14px; line-height: 1.7; word-break: break-all;">{$msg|raw}</p>
+            {if $url}
+                <div style="margin-top: 28px;">
+                    <a id="href" href="{$url|raw}" class="layui-btn layui-btn-primary">返回上一页</a>
+                </div>
+                <p style="margin: 16px 0 0; color: #8a94a6; font-size: 12px;">
+                    页面将在 <em id="wait" style="font-style: normal; color: #ff5722; font-weight: 600;">{$wait}</em> 秒后自动跳转
+                </p>
+            {/if}
+        </div>
+    </div>
+</div>
+<script src="{$assets}/component/layui/layui.js"></script>
+<script>
+    layui.use(['jquery'], function () {
+        var $ = layui.$;
+        var $link = $('#href');
+        var $wait = $('#wait');
+
+        if (!$link.length || !$wait.length) {
+            return;
+        }
+
+        var seconds = parseInt($wait.text(), 10) || 0;
+
+        if (seconds <= 0) {
+            window.location.href = $link.attr('href');
+            return;
+        }
+
+        var timer = setInterval(function () {
+            seconds -= 1;
+            $wait.text(seconds);
+
+            if (seconds <= 0) {
+                clearInterval(timer);
+                window.location.href = $link.attr('href');
+            }
+        }, 1000);
+    });
+</script>
+</body>
+</html>

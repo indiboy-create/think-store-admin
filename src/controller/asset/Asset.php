@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\controller\asset;
 
 use think\Response;
+use youvision\store\admin\controller\Controller;
 
 /**
  * 包内静态资源路由
@@ -12,7 +13,7 @@ use think\Response;
  * 直接读取 theme/assets 目录并输出，不需要发布到宿主 public；
  * 所有路径都经过 realpath 校验，拒绝目录穿越。
  */
-class AssetController
+class Asset extends Controller
 {
     private const MIME = [
         'css' => 'text/css; charset=utf-8',
@@ -57,7 +58,7 @@ class AssetController
             return null;
         }
 
-        $base = realpath(dirname(__DIR__) . '/theme/assets');
+        $base = realpath(dirname(__DIR__, 3) . '/theme/assets');
 
         if ($base === false) {
             return null;

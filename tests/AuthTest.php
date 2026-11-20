@@ -26,7 +26,11 @@ final class AuthTest extends TestCase
     ): Auth {
         $app = new App(dirname(__DIR__));
         $app->config->set(
-            array_merge((array) require dirname(__DIR__) . '/src/config/store_admin.php', $config),
+            array_replace_recursive(
+                (array) require dirname(__DIR__) . '/src/config/store_admin.php',
+                ['auth' => ['type' => 1]],
+                $config
+            ),
             'store_admin'
         );
 
@@ -259,7 +263,13 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
 
         $app = new App(dirname(__DIR__));
-        $app->config->set((array) require dirname(__DIR__) . '/src/config/store_admin.php', 'store_admin');
+        $app->config->set(
+            array_replace_recursive(
+                (array) require dirname(__DIR__) . '/src/config/store_admin.php',
+                ['auth' => ['type' => 1]]
+            ),
+            'store_admin'
+        );
 
         $request = (new Request())->withGet([])->withServer([
             'REQUEST_METHOD' => 'GET',
@@ -296,9 +306,9 @@ final class AuthTest extends TestCase
         $repository->rules = [['name' => 'user/index']];
 
         $app = new App(dirname(__DIR__));
-        $app->config->set(array_replace(
+        $app->config->set(array_replace_recursive(
             (array) require dirname(__DIR__) . '/src/config/store_admin.php',
-            ['auth' => ['request_cache' => false]]
+            ['auth' => ['type' => 1, 'request_cache' => false]]
         ), 'store_admin');
 
         $request = (new Request())->withGet([])->withServer([

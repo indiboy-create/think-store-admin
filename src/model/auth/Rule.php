@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\model;
+namespace youvision\store\admin\model\auth;
 
-use think\Model;
+use youvision\store\admin\model\BaseModel;
 use youvision\store\admin\support\CacheFlusher;
 
 /**
@@ -17,9 +17,9 @@ use youvision\store\admin\support\CacheFlusher;
  * @property int    $status
  * @property string $condition
  */
-class Rule extends Model
+class Rule extends BaseModel
 {
-    protected $name = 'store_admin_rule';
+    protected $name = 'auth_rule';
 
     protected $pk = 'id';
 

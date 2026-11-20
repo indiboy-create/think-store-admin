@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\support\theme;
 
 /**
  * 主题元数据与可见地址
@@ -21,7 +21,7 @@ final class Theme
      */
     public function __construct(protected array $config = [], string $packageRoot = '')
     {
-        $root = $packageRoot !== '' ? $packageRoot : dirname(__DIR__);
+        $root = $packageRoot !== '' ? $packageRoot : dirname(__DIR__, 3);
         $this->packageRoot = rtrim(str_replace('\\', '/', $root), '/');
     }
 
@@ -141,7 +141,7 @@ final class Theme
             ['label' => '缓存驱动', 'value' => (string) ($config['auth']['cache_store'] ?? 'cache')],
             ['label' => '缓存前缀', 'value' => (string) ($config['auth']['cache_prefix'] ?? 'store_admin')],
             ['label' => '请求内缓存', 'value' => (bool) ($config['auth']['request_cache'] ?? true) ? '启用' : '关闭'],
-            ['label' => '用户表', 'value' => (string) ($config['auth']['user'] ?? 'member')],
+            ['label' => '用户表', 'value' => (string) ($config['auth']['user'] ?? 'auth_user')],
             ['label' => '用户主键', 'value' => (string) ($config['auth']['user_pk'] ?? 'id')],
             ['label' => '用户模型', 'value' => (string) ($config['auth']['user_model'] ?? '') !== '' ? (string) $config['auth']['user_model'] : '未指定，使用用户表查询'],
             ['label' => 'URL 参数大小写', 'value' => (bool) ($config['auth']['url_lowercase'] ?? true) ? '忽略大小写' : '区分大小写'],
@@ -159,10 +159,10 @@ final class Theme
     public function tables(): array
     {
         return [
-            ['name' => 'store_admin_rule', 'title' => '权限规则', 'desc' => '规则标识、类型、状态与条件表达式'],
-            ['name' => 'store_admin_role', 'title' => '权限角色', 'desc' => '角色名称与启用状态'],
-            ['name' => 'store_admin_role_user', 'title' => '用户角色关系', 'desc' => '用户与角色的多对多关联'],
-            ['name' => 'store_admin_role_rule', 'title' => '角色规则关系', 'desc' => '角色与规则的关联，决定角色权限'],
+            ['name' => 'auth_rule', 'title' => '权限规则', 'desc' => '规则标识、类型、状态与条件表达式'],
+            ['name' => 'auth_role', 'title' => '权限角色', 'desc' => '角色名称与启用状态'],
+            ['name' => 'auth_role_user', 'title' => '用户角色关系', 'desc' => '用户与角色的多对多关联'],
+            ['name' => 'auth_role_rule', 'title' => '角色规则关系', 'desc' => '角色与规则的关联，决定角色权限'],
         ];
     }
 

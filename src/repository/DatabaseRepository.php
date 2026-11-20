@@ -7,9 +7,9 @@ namespace youvision\store\admin\repository;
 use think\App;
 use think\facade\Db;
 use youvision\store\admin\contract\Repository;
-use youvision\store\admin\model\Role;
-use youvision\store\admin\model\RoleUser;
-use youvision\store\admin\model\RoleRule;
+use youvision\store\admin\model\auth\Role;
+use youvision\store\admin\model\auth\RoleUser;
+use youvision\store\admin\model\auth\RoleRule;
 
 /**
  * 基于数据库的认证数据源
@@ -31,7 +31,7 @@ class DatabaseRepository implements Repository
         $this->app = $app;
         $this->config = array_replace_recursive([
             'auth' => [
-                'user' => 'member',
+                'user' => 'auth_user',
                 'user_pk' => 'id',
                 'user_model' => '',
                 'user_fields' => [

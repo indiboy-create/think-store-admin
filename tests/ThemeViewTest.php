@@ -7,10 +7,10 @@ namespace youvision\store\admin\tests;
 use think\App;
 use think\Request;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\AssetController;
-use youvision\store\admin\Theme;
-use youvision\store\admin\controller\ThemeController;
-use youvision\store\admin\View;
+use youvision\store\admin\controller\asset\Asset;
+use youvision\store\admin\support\theme\Theme;
+use youvision\store\admin\controller\doc\Overview;
+use youvision\store\admin\support\view\View;
 
 final class ThemeViewTest extends TestCase
 {
@@ -22,12 +22,12 @@ final class ThemeViewTest extends TestCase
         return $app;
     }
 
-    private function controller(?Theme $theme = null): ThemeController
+    private function controller(?Theme $theme = null): Overview
     {
         $app = $this->app();
         $theme ??= new Theme((array) require dirname(__DIR__) . '/src/config/store_admin.php', dirname(__DIR__));
 
-        return new ThemeController($theme, new View($app));
+        return new Overview($theme, new View($app));
     }
 
     private function request(int $currentUid = 0, array $get = []): Request
@@ -52,7 +52,7 @@ final class ThemeViewTest extends TestCase
             'apiUser' => '/store/think-store-admin/api/user',
             'version' => '1.0.0',
             'configs' => [['label' => '认证开关', 'value' => '已开启']],
-            'tables' => [['name' => 'store_admin_rule', 'title' => '权限规则', 'desc' => '规则说明']],
+            'tables' => [['name' => 'auth_rule', 'title' => '权限规则', 'desc' => '规则说明']],
             'routes' => [['method' => 'GET', 'path' => '/store/think-store-admin/index', 'name' => '权限总览']],
             'meta' => [['label' => '包名', 'value' => 'youvision/think-store-admin']],
             'uid' => 0,
@@ -66,7 +66,7 @@ final class ThemeViewTest extends TestCase
         self::assertStringContainsString('pear-admin', $html);
     }
 
-    public function testThemeControllerRendersResponse(): void
+    public function testOverviewRendersResponse(): void
     {
         $response = $this->controller()->index($this->request(5));
 
@@ -75,7 +75,7 @@ final class ThemeViewTest extends TestCase
         self::assertStringContainsString('layui-layout-admin', (string) $response->getContent());
     }
 
-    public function testThemeControllerUsesConfiguredThemeUser(): void
+    public function testOverviewUsesConfiguredThemeUser(): void
     {
         $theme = new Theme(array_replace(
             (array) require dirname(__DIR__) . '/src/config/store_admin.php',
@@ -121,22 +121,22 @@ final class ThemeViewTest extends TestCase
 
     public function testAssetResolve(): void
     {
-        $file = AssetController::resolve('doc/css/index.css');
+        $file = Asset::resolve('doc/css/index.css');
 
         self::assertNotNull($file);
         self::assertStringEndsWith('doc/css/index.css', str_replace('\\', '/', (string) $file));
-        self::assertSame('text/css; charset=utf-8', AssetController::mime((string) $file));
+        self::assertSame('text/css; charset=utf-8', Asset::mime((string) $file));
 
-        self::assertNull(AssetController::resolve(''));
-        self::assertNull(AssetController::resolve('../src/config/store_admin.php'));
-        self::assertNull(AssetController::resolve('css/missing.css'));
-        self::assertSame('image/svg+xml', AssetController::mime('icon.svg'));
-        self::assertSame('application/octet-stream', AssetController::mime('file.bin'));
+        self::assertNull(Asset::resolve(''));
+        self::assertNull(Asset::resolve('../src/config/store_admin.php'));
+        self::assertNull(Asset::resolve('css/missing.css'));
+        self::assertSame('image/svg+xml', Asset::mime('icon.svg'));
+        self::assertSame('application/octet-stream', Asset::mime('file.bin'));
     }
 
-    public function testAssetControllerFileResponse(): void
+    public function testAssetFileResponse(): void
     {
-        $controller = new AssetController();
+        $controller = new Asset();
 
         $response = $controller->file('doc/css/index.css');
 

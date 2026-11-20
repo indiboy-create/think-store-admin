@@ -79,7 +79,7 @@ final class SqlSplitterTest extends TestCase
 
         foreach ($statements as $statement) {
             self::assertStringStartsWith('CREATE TABLE IF NOT EXISTS', $statement);
-            self::assertStringContainsString('think_store_admin_', $statement);
+            self::assertStringContainsString('think_auth_', $statement);
         }
     }
 }

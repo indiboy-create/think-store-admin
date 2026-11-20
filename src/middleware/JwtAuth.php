@@ -8,7 +8,7 @@ use Closure;
 use think\App;
 use think\Request;
 use think\Response;
-use youvision\store\admin\Jwt;
+use youvision\store\admin\facade\Jwt;
 
 /**
  * JWT 认证中间件

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use think\facade\Route;
-use youvision\store\admin\AssetController;
+use youvision\store\admin\controller\asset\Asset;
 use youvision\store\admin\controller\Home;
 use youvision\store\admin\controller\Index;
 use youvision\store\admin\controller\Init;
 use youvision\store\admin\controller\Menu;
 use youvision\store\admin\controller\Passport;
-use youvision\store\admin\controller\ThemeController;
-use youvision\store\admin\controller\UploadController;
+use youvision\store\admin\controller\doc\Overview;
+use youvision\store\admin\controller\filecloud\Upload;
 use youvision\store\admin\controller\admin\Index as AdminIndex;
 use youvision\store\admin\middleware\JwtAuth;
 use youvision\store\admin\middleware\ThemeAccess;
@@ -64,12 +64,12 @@ $register = static function () use ($segment): void {
     }
 
     // JSON 接口统一挂在 api 段下，与页面路由区分
-    Route::get($base . 'api/user', [ThemeController::class, 'user'])
+    Route::get($base . 'api/user', [Overview::class, 'user'])
         ->name('store_admin.user')
         ->completeMatch();
 
     // 静态资源直接由路由输出，无需发布到 public
-    Route::get($base . 'assets/<path>', [AssetController::class, 'file'])
+    Route::get($base . 'assets/<path>', [Asset::class, 'file'])
         ->pattern(['path' => '.*'])
         ->name('store_admin.asset');
 };
@@ -83,7 +83,7 @@ if ((bool) config('store_admin.upload.enabled', true)) {
         . ($segment === '' ? '' : $segment . '/')
         . 'upload';
 
-    Route::post($uploadPath, [UploadController::class, 'upload'])
+    Route::post($uploadPath, [Upload::class, 'upload'])
         ->middleware($uploadMiddleware)
         ->name('store_admin.upload')
         ->completeMatch();

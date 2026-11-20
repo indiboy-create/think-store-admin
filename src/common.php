@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use think\Response;
-use youvision\store\admin\Auth;
-use youvision\store\admin\Jwt;
-use youvision\store\admin\Theme;
-use youvision\store\admin\View;
+use youvision\store\admin\facade\Auth;
+use youvision\store\admin\facade\Jwt;
+use youvision\store\admin\support\theme\Theme;
+use youvision\store\admin\support\view\View;
 use youvision\store\admin\support\admin\Salting;
 use youvision\store\admin\support\url\Url;
 
@@ -134,6 +134,7 @@ if (!function_exists('store_admin_purge_user')) {
         return Auth::purgeUser($uid);
     }
 }
+
 if (!function_exists('store_admin_make_salt')) {
     function store_admin_make_salt(?int $length = null): string
     {
@@ -174,6 +175,7 @@ if (!function_exists('store_admin_verify_password')) {
         return Auth::verifyPassword($login, $password);
     }
 }
+
 if (!function_exists('store_admin_jwt_issue')) {
     /**
      * @param array<string, mixed> $claims

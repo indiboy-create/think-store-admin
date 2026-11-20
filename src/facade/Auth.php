@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\facade;
 
 use youvision\store\admin\service\Auth as AuthService;
 

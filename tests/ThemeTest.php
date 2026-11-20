@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\Theme;
+use youvision\store\admin\support\theme\Theme;
 
 final class ThemeTest extends TestCase
 {
@@ -97,7 +97,7 @@ final class ThemeTest extends TestCase
         $theme = $this->theme();
 
         self::assertCount(4, $theme->tables());
-        self::assertSame('store_admin_rule', $theme->tables()[0]['name']);
+        self::assertSame('auth_rule', $theme->tables()[0]['name']);
         self::assertCount(3, $theme->routes());
         self::assertSame('/store/think-store-admin/index', $theme->routes()[0]['path']);
         self::assertSame('/store/think-store-admin/assets/<path>', $theme->routes()[2]['path']);

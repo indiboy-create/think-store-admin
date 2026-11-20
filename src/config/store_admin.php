@@ -86,7 +86,7 @@ return [
 
         // 认证方式：1 实时认证，每次认证都查询数据库；
         // 2 持久缓存认证，规则列表写入 auth.cache_store 指定的存储
-        'type' => 1,
+        'type' => 2,
 
         // 认证方式为 2 时的持久缓存驱动：cache（共享存储，适合常驻内存多 Worker）或 session（仅单进程）
         'cache_store' => 'cache',
@@ -101,8 +101,8 @@ return [
         'request_cache' => true,
 
         // 用户表名（不含数据库前缀），用于读取用户字段并解析规则 condition 中的 {字段名}
-        // 例如用户表为 think_member 时，此处填写 member
-        'user' => 'member',
+        // 例如用户表为 think_auth_user 时，此处填写 auth_user
+        'user' => 'auth_user',
 
         // 用户表主键
         'user_pk' => 'id',

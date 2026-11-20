@@ -6,7 +6,7 @@ namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\support\url\Url;
-use youvision\store\admin\Theme;
+use youvision\store\admin\support\theme\Theme;
 
 final class UrlTest extends TestCase
 {

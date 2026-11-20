@@ -21,7 +21,7 @@
 					<img class="login-bg-img" src="{$assets}/admin/images/banner.png" alt="" />
 				</div>
 				<div class="layui-col-sm6 layui-col-xs12 login-form">
-					<div class="layui-form">
+					<form class="layui-form" action="{:store_admin_url('passport/login')}" method="post">
 						<div class="form-center">
 							<div class="form-center-box">
 								<div class="top-log-title">
@@ -38,6 +38,9 @@
 												<i class="layui-icon layui-icon-username"></i>
 											</div>
 											<input
+												type="text"
+												name="username"
+												value=""										
 												lay-verify="required"
 												placeholder="账户"
 												autocomplete="off"
@@ -52,9 +55,9 @@
 											</div>
 											<input
 												type="password"
-												name="confirmPassword"
+												name="password"
 												value=""
-												lay-verify="required|confirmPassword"
+												lay-verify="required"
 												placeholder="密码"
 												autocomplete="off"
 												class="layui-input"
@@ -69,8 +72,10 @@
 													<i class="layui-icon layui-icon-auz"></i>
 												</div>
 												<input
+													type="text"
+													name="captcha"
 													lay-verify="required"
-													value="VBJFQ"
+													value=""
 													placeholder="验证码"
 													autocomplete="off"
 													class="layui-input"
@@ -78,7 +83,7 @@
 											</div>
 										</div>
 										<img
-											src="{$assets}/admin/images/captcha.gif"
+											src="{:captcha_src()}"
 											alt=""
 											class="verification-img"
 										/>
@@ -112,7 +117,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -120,16 +125,45 @@
 		<script src="{$assets}/component/layui/layui.js"></script>
 		<script src="{$assets}/component/pear/pear.js"></script>
 		<script>
-			layui.use(['form'], function () {
+			layui.use(['form', 'layer', 'jquery'], function () {
 				var form = layui.form;
+				var layer = layui.layer;
+				var $ = layui.jquery;
 
 				// 登 录 提 交
 				form.on('submit(login)', function (data) {
-					/// 验证
+					var loading = layer.load(2);
 
-					/// 登录
+					$.ajax({
+						url: "{:store_admin_url('passport/login')}",
+						type: 'post',
+						dataType: 'json',
+						data: data.field,
+						success: function (res) {
+							layer.close(loading);
 
-					/// 动画
+							if (Number(res.code) === 0) {
+								layer.msg(res.msg || '登录成功', { icon: 1, time: 800 }, function () {
+									location.href = res.url || "{:store_admin_url('index')}";
+								});
+								return;
+							}
+
+							layer.msg(res.msg || '登录失败', { icon: 2 });
+
+							var captcha = $('.verification-img');
+							captcha.attr('src', (captcha.attr('src') || '').split('?')[0] + '?t=' + Date.now());
+						},
+						error: function (xhr) {
+							layer.close(loading);
+
+							var msg = xhr.responseJSON && xhr.responseJSON.msg
+								? xhr.responseJSON.msg
+								: '登录失败，请稍后重试';
+
+							layer.msg(msg, { icon: 2 });
+						}
+					});
 
 					return false;
 				});

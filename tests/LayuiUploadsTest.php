@@ -8,7 +8,7 @@ use think\App;
 use think\Request;
 use think\file\UploadedFile;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\controller\UploadController;
+use youvision\store\admin\controller\filecloud\Upload;
 use youvision\store\admin\support\layui\LayuiUploads;
 
 final class LayuiUploadsTest extends TestCase
@@ -168,7 +168,7 @@ final class LayuiUploadsTest extends TestCase
     public function testControllerReturnsJsonResponse(): void
     {
         $request = $this->requestWith($this->pngFile());
-        $response = (new UploadController())->upload($request);
+        $response = (new Upload())->upload($request);
 
         self::assertSame(200, $response->getCode());
         self::assertStringContainsString('"code":0', (string) $response->getContent());

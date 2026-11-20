@@ -9,7 +9,9 @@ use youvision\store\admin\command\Config;
 use youvision\store\admin\command\Install;
 use youvision\store\admin\command\Purge;
 use youvision\store\admin\service\Auth as AuthService;
+use youvision\store\admin\support\theme\Theme;
 use youvision\store\admin\support\url\Url;
+use youvision\store\admin\support\view\View;
 
 /**
  * 认证服务注册入口
@@ -47,7 +49,7 @@ class Service extends BaseService
     public function boot(): void
     {
         if ((bool) $this->app->config->get('store_admin.route.enabled', true)) {
-            $this->loadRoutesFrom(dirname(__DIR__) . '/route/store_admin.php');
+            $this->loadRoutesFrom(__DIR__ . '/route/store_admin.php');
         }
 
         if ($this->app->runningInConsole()) {

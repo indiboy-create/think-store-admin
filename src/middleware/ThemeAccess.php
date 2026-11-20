@@ -8,7 +8,7 @@ use Closure;
 use think\App;
 use think\Request;
 use think\Response;
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 /**
  * 权限总览主题访问控制

@@ -13,7 +13,7 @@ class Passport extends Controller
     {
         if ($this->request->isAjax()) {
             $data = $this->request->param();
-            $login = trim((string) ($data['user_name'] ?? ''));
+            $login = trim((string) ($data['username'] ?? $data['user_name'] ?? ''));
             $password = (string) ($data['password'] ?? '');
             $uid = store_admin_verify_password($login, $password);
 

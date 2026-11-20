@@ -8,7 +8,7 @@ use think\App;
 use think\Request;
 use think\Response;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\Jwt;
+use youvision\store\admin\facade\Jwt;
 use youvision\store\admin\middleware\JwtAuth;
 
 final class JwtAuthTest extends TestCase

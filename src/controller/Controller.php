@@ -8,8 +8,16 @@ use think\Request;
 
 class Controller
 {
-    public function __construct(protected Request $request)
+    public function __construct(protected ?Request $request = null)
     {
+    }
+
+    /**
+     * 获取当前请求对象
+     */
+    protected function request(): Request
+    {
+        return $this->request ??= app('request');
     }
 
     /**
@@ -17,7 +25,7 @@ class Controller
      */
     protected function postData(string $key): mixed
     {
-        return $this->request->post($key . '/a');
+        return $this->request()->post($key . '/a');
     }
 
     /**

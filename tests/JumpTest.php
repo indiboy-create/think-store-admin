@@ -10,7 +10,7 @@ use think\exception\HttpResponseException;
 use think\Request;
 use think\Response;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\Jump;
+use youvision\store\admin\support\jump\Jump;
 
 final class JumpTest extends TestCase
 {

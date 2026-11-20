@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\model;
+namespace youvision\store\admin\model\auth;
 
-use think\Model;
 use think\model\relation\HasMany;
 use think\model\relation\HasOne;
+use youvision\store\admin\model\BaseModel;
 use youvision\store\admin\support\CacheFlusher;
 
 /**
@@ -15,9 +15,9 @@ use youvision\store\admin\support\CacheFlusher;
  * @property int $user_id
  * @property int $role_id
  */
-class RoleUser extends Model
+class RoleUser extends BaseModel
 {
-    protected $name = 'store_admin_role_user';
+    protected $name = 'auth_role_user';
 
     protected $pk = 'user_id';
 

@@ -8,7 +8,7 @@ use Closure;
 use think\App;
 use think\Request;
 use think\Response;
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 /**
  * 控制器/方法级权限认证中间件

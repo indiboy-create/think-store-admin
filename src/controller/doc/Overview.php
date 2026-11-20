@@ -2,21 +2,24 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\controller;
+namespace youvision\store\admin\controller\doc;
 
 use think\Request;
 use think\Response;
-use youvision\store\admin\Theme;
-use youvision\store\admin\View;
+use youvision\store\admin\controller\Controller;
+use youvision\store\admin\facade\Auth;
 use youvision\store\admin\service\Auth as AuthService;
+use youvision\store\admin\support\theme\Theme;
+use youvision\store\admin\support\view\View;
 
 /**
  * 权限总览主题控制器
  */
-class ThemeController
+class Overview extends Controller
 {
-    public function __construct(protected Theme $theme, protected View $view)
+    public function __construct(protected Theme $theme, protected View $view, ?Request $request = null)
     {
+        parent::__construct($request);
     }
 
     public function index(Request $request): Response

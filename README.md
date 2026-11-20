@@ -54,7 +54,7 @@ php think store:admin:config --force
 | `auth.cache_ttl` | `0` | 持久缓存有效期（秒），`0` 表示永久 |
 | `auth.cache_prefix` | `store_admin` | 缓存键前缀 |
 | `auth.request_cache` | `true` | 是否启用请求内规则缓存；无 HTTP 请求上下文时自动关闭 |
-| `auth.user` | `member` | 用户表名（不含数据库前缀），需包含 `email`、`mobile`、`username`、`password`、`salt`、`salt2` |
+| `auth.user` | `auth_user` | 用户表名（不含数据库前缀），需包含 `email`、`mobile`、`username`、`password`、`salt`、`salt2` |
 | `auth.user_pk` | `id` | 用户表主键 |
 | `auth.user_model` | 空 | 用户模型类名。留空时直接使用 `auth.user` 表查询 |
 | `auth.user_fields` | 见下方 | 用户表字段映射 |
@@ -105,7 +105,7 @@ php think store:admin:config --force
 登录校验：
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 $uid = Auth::verifyPassword('alice', 'plain-password');
 // 成功返回用户 ID，失败返回 0
@@ -143,7 +143,7 @@ $hash = Salting::encode($password, $pair['salt'], $pair['salt2']);
 使用示例：
 
 ```php
-use youvision\store\admin\Jwt;
+use youvision\store\admin\facade\Jwt;
 
 $token = Jwt::issue(['user_id' => 1, 'username' => 'alice']);
 
@@ -377,7 +377,7 @@ declare(strict_types=1);
 
 namespace app;
 
-use youvision\store\admin\Jump;
+use youvision\store\admin\support\jump\Jump;
 
 abstract class BaseController
 {
@@ -521,10 +521,10 @@ php think store:admin:install
 
 | 表名 | 说明 |
 | --- | --- |
-| `store_admin_rule` | 权限规则表，`name` 为规则唯一标识，`status = 1` 时有效，`condition` 为条件表达式 |
-| `store_admin_role` | 权限角色表 |
-| `store_admin_role_user` | 用户与角色关系表 |
-| `store_admin_role_rule` | 角色与规则关系表 |
+| `auth_rule` | 权限规则表，`name` 为规则唯一标识，`status = 1` 时有效，`condition` 为条件表达式 |
+| `auth_role` | 权限角色表 |
+| `auth_role_user` | 用户与角色关系表 |
+| `auth_role_rule` | 角色与规则关系表 |
 
 需要删除并重建表时追加 `--drop`，**该操作会清空认证数据**：
 
@@ -537,7 +537,7 @@ php think store:admin:install --drop
 ### 方法签名
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 // 检查权限：$name 支持逗号分隔字符串或数组；$type 为规则类型，0 表示不限制；
 // $mode 为 url 时同时校验规则中的请求参数；$relation 支持 or / and
@@ -556,7 +556,7 @@ Auth::flush(int $uid = 0, int $type = 0): void;
 ### 权限判断
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 if (Auth::check('admin/user/index', 1)) {
     // 拥有该规则权限
@@ -628,7 +628,7 @@ namespace app\middleware;
 use Closure;
 use think\Request;
 use think\Response;
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 class AuthCheck
 {
@@ -652,7 +652,7 @@ class AuthCheck
 ### 获取用户权限与角色
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 // 用户拥有的全部规则
 $rules = Auth::rules(1);
@@ -676,17 +676,17 @@ store_admin_role_ids(1);   // 全部角色 ID
 
 权限认证按规则进行。先定义规则，再将规则分配给角色，最后将用户加入角色：
 
-1. 在 `store_admin_rule` 表中添加规则，例如 `user/edit`。
-2. 在 `store_admin_role` 表中创建角色，例如「内容管理员」。
-3. 在 `store_admin_role_rule` 表中关联角色与规则。
-4. 在 `store_admin_role_user` 表中关联用户与角色。
+1. 在 `auth_rule` 表中添加规则，例如 `user/edit`。
+2. 在 `auth_role` 表中创建角色，例如「内容管理员」。
+3. 在 `auth_role_rule` 表中关联角色与规则。
+4. 在 `auth_role_user` 表中关联用户与角色。
 
 一个用户可以属于多个角色，只要其中任意一个角色拥有目标规则，认证即通过。
 
-删除角色或规则时，包内模型事件会同步清理 `store_admin_role_rule`、`store_admin_role_user` 关系并刷新认证缓存。删除用户后应调用：
+删除角色或规则时，包内模型事件会同步清理 `auth_role_rule`、`auth_role_user` 关系并刷新认证缓存。删除用户后应调用：
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 Auth::purgeUser(1);       // 删除用户角色关系并清理缓存
 store_admin_purge_user(1); // 全局函数
@@ -737,7 +737,7 @@ user/index?type=admin
 - 常驻内存（Swoole/Workerman）多 Worker 环境应使用 `auth.cache_store = cache` 并配置共享缓存；模型事件清理共享缓存后，其他 Worker 的下个请求会重新计算。`session` 无法清理其他会话，仅适用于单进程场景。
 
 ```php
-use youvision\store\admin\Auth;
+use youvision\store\admin\facade\Auth;
 
 Auth::flush(1);    // 清理用户 1 的全部类型缓存
 Auth::flush(1, 1); // 清理用户 1、类型 1 的缓存
@@ -759,7 +759,7 @@ Auth::flush();     // 清理全部认证缓存
 总览页包含：
 
 - 认证开关、认证方式、缓存驱动、用户表等运行配置。
-- `store_admin_rule`、`store_admin_role`、`store_admin_role_user`、`store_admin_role_rule` 四张数据表的用途。
+- `auth_rule`、`auth_role`、`auth_role_user`、`auth_role_rule` 四张数据表的用途。
 - 主题路由清单与包版本信息。
 - 按用户 ID 查询可用规则与所属角色，结果以 layui 数据表格展示。
 
@@ -812,23 +812,24 @@ return [
 
 ```text
 
-route/
-└── store_admin.php          主题页面、查询接口与静态资源路由
-src/
-├── Auth.php                静态入口
-├── AssetController.php     包内静态资源输出
-├── Jump.php                控制器跳转响应 trait
-├── Jwt.php                 JWT 静态入口
-├── Service.php             服务注册与主题路由加载
-├── Theme.php               主题地址与页面元数据
 
-├── View.php                包内模板渲染器
+src/
+├── Service.php             服务注册与主题路由加载
+├── common.php              全局函数
+├── facade/
+│   ├── Auth.php            权限认证静态入口
+│   └── Jwt.php             JWT 静态入口
 ├── config/
 │   └── store_admin.php     默认配置
+├── route/
+│   └── store_admin.php     主题页面、查询接口与静态资源路由
 ├── controller/
-│   ├── ThemeController.php 权限总览页与查询接口
-│   └── UploadController.php Layui 上传接口
-├── helper.php              全局函数
+│   ├── asset/
+│   │   └── Asset.php 包内静态资源输出
+│   ├── doc/
+│   │   └── Overview.php 权限总览页与查询接口
+│   └── filecloud/
+│       └── Upload.php Layui 上传接口
 ├── command/
 │   ├── Config.php          发布配置命令
 │   ├── Install.php         创建数据表命令
@@ -843,14 +844,17 @@ src/
 │   ├── JwtAuth.php         JWT 认证中间件
 │   └── ThemeAccess.php     权限总览访问控制
 ├── model/
-│   ├── Role.php
-│   ├── RoleRule.php
-│   ├── RoleUser.php
-│   └── Rule.php
+│   ├── BaseModel.php       模型基类
+│   └── auth/
+│       ├── Role.php
+│       ├── RoleRule.php
+│       ├── RoleUser.php
+│       └── Rule.php
 ├── repository/
 │   └── DatabaseRepository.php
 ├── service/
-│   └── Auth.php            认证核心逻辑
+│   ├── Auth.php            认证核心逻辑
+│   └── Jwt.php             JWT 签发与校验
 ├── store/
 │   ├── CacheStore.php
 │   ├── NullStore.php
@@ -860,18 +864,25 @@ src/
 └── support/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
-    ├── Jwt.php             JWT 签发与校验
     ├── RuleMatcher.php
     ├── SqlSplitter.php
     ├── admin/
     │   └── Salting.php     密码加盐算法
     ├── enum/
     │   └── EnumEnhance.php 枚举增强 trait
-    └── layui/
-        ├── LayuiDropdown.php Layui dropdown 数据与重载
-        ├── LayuiTable.php    Layui table 服务端工具
-        ├── LayuiTree.php     Layui 树形结构工具
-        └── LayuiUploads.php  Layui 上传接口工具
+    ├── jump/
+    │   └── Jump.php        控制器跳转响应 trait
+    ├── theme/
+    │   └── Theme.php       主题地址与页面元数据
+    ├── layui/
+    │   ├── LayuiDropdown.php Layui dropdown 数据与重载
+    │   ├── LayuiTable.php    Layui table 服务端工具
+    │   ├── LayuiTree.php     Layui 树形结构工具
+    │   └── LayuiUploads.php  Layui 上传接口工具
+    ├── url/
+    │   └── Url.php          包内链接生成器
+    └── view/
+        └── View.php         包内模板渲染器
 theme/
 ├── view/
 │   ├── index.html          权限总览页

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace youvision\store\admin\support\url;
 
-use youvision\store\admin\Theme;
+use youvision\store\admin\support\theme\Theme;
 
 /**
  * 包内链接生成器

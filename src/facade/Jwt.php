@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\facade;
 
-use youvision\store\admin\support\Jwt as JwtService;
+use youvision\store\admin\service\Jwt as JwtService;
 
 /**
  * JWT 静态入口

@@ -9,7 +9,7 @@ use think\App;
 
 use think\Request;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\Jwt;
+use youvision\store\admin\service\Jwt;
 
 final class JwtTest extends TestCase
 {

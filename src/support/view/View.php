@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\support\view;
 
 use think\App;
 use think\view\driver\Think;
@@ -56,7 +56,7 @@ class View
         $view = rtrim((string) $this->app->config->get('store_admin.view', ''), '/\\');
 
         if ($view === '') {
-            return dirname(__DIR__) . '/theme/view/';
+            return dirname(__DIR__, 3) . '/theme/view/';
         }
 
         $absolute = str_starts_with($view, '/') || preg_match('/^[A-Za-z]:[\/\\\\]/', $view) === 1;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin;
+namespace youvision\store\admin\support\jump;
 
 use think\App;
 use think\exception\HttpResponseException;
@@ -134,7 +134,7 @@ trait Jump
     {
         $template = trim((string) $this->jumpConfig($type === 'success' ? 'success_tmpl' : 'error_tmpl', ''));
 
-        return $template !== '' ? $template : __DIR__ . '/tpl/dispatch_jump.tpl';
+        return $template !== '' ? $template : dirname(__DIR__, 2) . '/tpl/dispatch_jump.tpl';
     }
 
     protected function dispatchJump(array $result, array $header, string $type): void

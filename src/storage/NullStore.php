@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\store;
+namespace youvision\store\admin\storage;
 
 use youvision\store\admin\contract\Store;
 

@@ -12,7 +12,7 @@ use think\console\Output;
 /**
  * 发布认证配置文件
  */
-class Config extends Command
+class PublishConfig extends Command
 {
     protected function configure(): void
     {

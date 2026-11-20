@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\controller\filecloud;
+namespace youvision\store\admin\controller\upload;
 
 use think\Request;
 use think\Response;

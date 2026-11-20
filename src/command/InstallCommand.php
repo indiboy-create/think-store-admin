@@ -13,7 +13,7 @@ use youvision\store\admin\support\SqlSplitter;
 /**
  * 初始化认证数据表
  */
-class Install extends Command
+class InstallCommand extends Command
 {
     protected function configure(): void
     {

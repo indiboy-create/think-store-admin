@@ -134,7 +134,7 @@ trait Jump
     {
         $template = trim((string) $this->jumpConfig($type === 'success' ? 'success_tmpl' : 'error_tmpl', ''));
 
-        return $template !== '' ? $template : dirname(__DIR__, 2) . '/tpl/dispatch_jump.tpl';
+        return $template !== '' ? $template : dirname(__DIR__, 3) . '/theme/view/dispatch_jump.html';
     }
 
     protected function dispatchJump(array $result, array $header, string $type): void

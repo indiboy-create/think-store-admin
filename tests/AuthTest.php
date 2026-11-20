@@ -9,8 +9,8 @@ use think\Request;
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\contract\Store;
 use youvision\store\admin\service\Auth;
-use youvision\store\admin\tests\Support\FakeRepository;
-use youvision\store\admin\tests\Support\MemoryStore;
+use youvision\store\admin\tests\support\FakeRepository;
+use youvision\store\admin\tests\support\MemoryStore;
 
 final class AuthTest extends TestCase
 {

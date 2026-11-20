@@ -8,7 +8,7 @@ use think\App;
 use think\Request;
 use think\file\UploadedFile;
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\controller\filecloud\Upload;
+use youvision\store\admin\controller\upload\Upload;
 use youvision\store\admin\support\layui\LayuiUploads;
 
 final class LayuiUploadsTest extends TestCase

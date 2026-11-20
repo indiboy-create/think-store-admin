@@ -5,12 +5,12 @@ declare(strict_types=1);
 use think\facade\Route;
 use youvision\store\admin\controller\asset\Asset;
 use youvision\store\admin\controller\Home;
-use youvision\store\admin\controller\Index;
+use youvision\store\admin\controller\Dashboard;
 use youvision\store\admin\controller\Init;
 use youvision\store\admin\controller\Menu;
 use youvision\store\admin\controller\Passport;
-use youvision\store\admin\controller\doc\Overview;
-use youvision\store\admin\controller\filecloud\Upload;
+use youvision\store\admin\controller\theme\Overview;
+use youvision\store\admin\controller\upload\Upload;
 use youvision\store\admin\controller\admin\Index as AdminIndex;
 use youvision\store\admin\middleware\JwtAuth;
 use youvision\store\admin\middleware\ThemeAccess;
@@ -38,7 +38,7 @@ $register = static function () use ($segment): void {
     $base = $segment === '' ? '' : $segment . '/';
 
     $pages = [
-        'index' => ['get', Index::class, 'index'],
+        'index' => ['get', Dashboard::class, 'index'],
         'admin' => ['get', AdminIndex::class, 'index'],
         'home' => ['get', Home::class, 'index'],
         'menu' => ['get', Menu::class, 'index'],
@@ -47,12 +47,12 @@ $register = static function () use ($segment): void {
         'passport/logout' => ['*', Passport::class, 'logout'],
     ];
 
-    Route::get($segment === '' ? '/' : $segment, [Index::class, 'index'])
+    Route::get($segment === '' ? '/' : $segment, [Dashboard::class, 'index'])
         ->name('store_admin.root')
         ->completeMatch();
 
     if ($segment !== '') {
-        Route::get($segment . '/', [Index::class, 'index'])
+        Route::get($segment . '/', [Dashboard::class, 'index'])
             ->name('store_admin.root.slash')
             ->completeMatch();
     }

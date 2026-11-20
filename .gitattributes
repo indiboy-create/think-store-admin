@@ -1,0 +1,8 @@
+/tests export-ignore
+/phpunit.xml export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.phpunit.cache export-ignore
+/.codeartsdoer export-ignore
+/example export-ignore
+/runtime export-ignore

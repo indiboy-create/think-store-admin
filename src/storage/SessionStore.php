@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\store;
+namespace youvision\store\admin\storage;
 
 use think\facade\Session;
 use youvision\store\admin\contract\Store;

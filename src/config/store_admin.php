@@ -236,7 +236,7 @@ return [
 
     // 跳转响应配置
     'jump' => [
-        // 为空时使用包内 src/tpl/dispatch_jump.tpl
+        // 为空时使用包内 theme/view/dispatch_jump.html
         'success_tmpl' => '',
         'error_tmpl' => '',
 

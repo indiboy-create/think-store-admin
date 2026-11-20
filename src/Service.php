@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace youvision\store\admin;
 
 use think\Service as BaseService;
-use youvision\store\admin\command\Config;
-use youvision\store\admin\command\Install;
-use youvision\store\admin\command\Purge;
+use youvision\store\admin\command\InstallCommand;
+use youvision\store\admin\command\PublishConfig;
+use youvision\store\admin\command\PurgeCommand;
 use youvision\store\admin\service\Auth as AuthService;
 use youvision\store\admin\support\theme\Theme;
 use youvision\store\admin\support\url\Url;
@@ -54,9 +54,9 @@ class Service extends BaseService
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                'store:admin:config' => Config::class,
-                'store:admin:install' => Install::class,
-                'store:admin:purge' => Purge::class,
+                'store:admin:config' => PublishConfig::class,
+                'store:admin:install' => InstallCommand::class,
+                'store:admin:purge' => PurgeCommand::class,
             ]);
         }
     }

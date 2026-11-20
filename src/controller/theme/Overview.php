@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\controller\doc;
+namespace youvision\store\admin\controller\theme;
 
 use think\Request;
 use think\Response;

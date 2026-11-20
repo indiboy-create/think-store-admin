@@ -7,7 +7,7 @@ use youvision\store\admin\facade\Auth;
 use youvision\store\admin\facade\Jwt;
 use youvision\store\admin\support\theme\Theme;
 use youvision\store\admin\support\view\View;
-use youvision\store\admin\support\admin\Salting;
+use youvision\store\admin\support\auth\Salting;
 use youvision\store\admin\support\url\Url;
 
 if (!function_exists('youvision')) {

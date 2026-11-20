@@ -13,7 +13,7 @@ use youvision\store\admin\service\Auth as AuthService;
 /**
  * 清理已删除用户的角色关系与认证缓存
  */
-class Purge extends Command
+class PurgeCommand extends Command
 {
     protected function configure(): void
     {

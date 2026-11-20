@@ -9,7 +9,7 @@ use think\Request;
 use PHPUnit\Framework\TestCase;
 use youvision\store\admin\controller\asset\Asset;
 use youvision\store\admin\support\theme\Theme;
-use youvision\store\admin\controller\doc\Overview;
+use youvision\store\admin\controller\theme\Overview;
 use youvision\store\admin\support\view\View;
 
 final class ThemeViewTest extends TestCase

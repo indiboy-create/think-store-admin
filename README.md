@@ -114,7 +114,7 @@ $uid = Auth::verifyPassword('alice', 'plain-password');
 注册或重置密码时生成盐与哈希：
 
 ```php
-use youvision\store\admin\support\admin\Salting;
+use youvision\store\admin\support\auth\Salting;
 
 $pair = Salting::makePair();
 $hash = Salting::encode($password, $pair['salt'], $pair['salt2']);
@@ -359,7 +359,7 @@ return [
 
 | 配置项 | 默认值 | 说明 |
 | --- | --- | --- |
-| `jump.success_tmpl` | 空 | 成功跳转模板；为空时使用包内 `src/tpl/dispatch_jump.tpl` |
+| `jump.success_tmpl` | 空 | 成功跳转模板；为空时使用包内 `theme/view/dispatch_jump.html` |
 | `jump.error_tmpl` | 空 | 失败跳转模板；为空时使用包内模板 |
 | `jump.wait` | `3` | 页面跳转等待秒数 |
 | `jump.success_code` | `1` | Ajax/JSON 成功响应码 |
@@ -460,13 +460,13 @@ class User extends BaseController
 `EnumEnhance` 提供枚举名称、值、比较、实例化、数组转换和多语言描述，位于：
 
 ```php
-youvision\store\admin\support\enum\EnumEnhance
+youvision\store\admin\support\enums\EnumEnhance
 ```
 
 ```php
 namespace app\enums;
 
-use youvision\store\admin\support\enum\EnumEnhance;
+use youvision\store\admin\support\enums\EnumEnhance;
 
 enum UserType: int
 {
@@ -815,7 +815,7 @@ return [
 
 src/
 ├── Service.php             服务注册与主题路由加载
-├── common.php              全局函数
+├── helper.php              全局函数
 ├── facade/
 │   ├── Auth.php            权限认证静态入口
 │   └── Jwt.php             JWT 静态入口
@@ -824,16 +824,23 @@ src/
 ├── route/
 │   └── store_admin.php     主题页面、查询接口与静态资源路由
 ├── controller/
+│   ├── Dashboard.php      权限总览首页
+│   ├── Home.php           首页
+│   ├── Init.php           初始化配置
+│   ├── Menu.php           Layui 菜单数据
+│   ├── Passport.php       登录与退出
+│   ├── admin/
+│   │   └── Index.php      后台首页
 │   ├── asset/
-│   │   └── Asset.php 包内静态资源输出
-│   ├── doc/
-│   │   └── Overview.php 权限总览页与查询接口
-│   └── filecloud/
-│       └── Upload.php Layui 上传接口
+│   │   └── Asset.php      包内静态资源输出
+│   ├── theme/
+│   │   └── Overview.php   权限总览页与查询接口
+│   └── upload/
+│       └── Upload.php     Layui 上传接口
 ├── command/
-│   ├── Config.php          发布配置命令
-│   ├── Install.php         创建数据表命令
-│   └── Purge.php           清理已删除用户的授权关系
+│   ├── PublishConfig.php   发布配置命令
+│   ├── InstallCommand.php  创建数据表命令
+│   └── PurgeCommand.php    清理已删除用户的授权关系
 ├── contract/
 │   ├── Repository.php      认证数据源契约
 │   └── Store.php           持久缓存契约
@@ -855,20 +862,19 @@ src/
 ├── service/
 │   ├── Auth.php            认证核心逻辑
 │   └── Jwt.php             JWT 签发与校验
-├── store/
+├── storage/
 │   ├── CacheStore.php
 │   ├── NullStore.php
 │   └── SessionStore.php
-├── tpl/
-│   └── dispatch_jump.tpl   跳转提示模板
+
 └── support/
     ├── CacheFlusher.php    授权变更后的缓存清理
     ├── ConditionEvaluator.php
     ├── RuleMatcher.php
     ├── SqlSplitter.php
-    ├── admin/
+    ├── auth/
     │   └── Salting.php     密码加盐算法
-    ├── enum/
+    ├── enums/
     │   └── EnumEnhance.php 枚举增强 trait
     ├── jump/
     │   └── Jump.php        控制器跳转响应 trait
@@ -886,6 +892,12 @@ src/
 theme/
 ├── view/
 │   ├── index.html          权限总览页
+│   ├── home.html           首页
+│   ├── login.html          登录页
+│   ├── layui.html          Layui 组件示例
+│   ├── dispatch_jump.html  跳转提示模板
+│   ├── admin/
+│   │   └── index.html      后台首页
 │   └── doc/
 │       └── index.html      静态文档首页
 └── assets/

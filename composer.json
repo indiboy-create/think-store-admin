@@ -30,7 +30,7 @@
             "youvision\\store\\admin\\": "src/"
         },
         "files": [
-            "src/common.php"
+            "src/helper.php"
         ]
     },
     "autoload-dev": {

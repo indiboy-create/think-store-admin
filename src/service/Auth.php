@@ -9,12 +9,12 @@ use think\Request;
 use youvision\store\admin\contract\Repository;
 use youvision\store\admin\contract\Store;
 use youvision\store\admin\repository\DatabaseRepository;
-use youvision\store\admin\store\CacheStore;
-use youvision\store\admin\store\NullStore;
-use youvision\store\admin\store\SessionStore;
+use youvision\store\admin\storage\CacheStore;
+use youvision\store\admin\storage\NullStore;
+use youvision\store\admin\storage\SessionStore;
 use youvision\store\admin\support\ConditionEvaluator;
 use youvision\store\admin\support\RuleMatcher;
-use youvision\store\admin\support\admin\Salting;
+use youvision\store\admin\support\auth\Salting;
 
 /**
  * 权限认证核心服务

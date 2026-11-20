@@ -107,7 +107,7 @@ final class JumpTest extends TestCase
 
     public function testTemplateExists(): void
     {
-        self::assertFileExists(dirname(__DIR__) . '/src/tpl/dispatch_jump.tpl');
+        self::assertFileExists(dirname(__DIR__) . '/theme/view/dispatch_jump.html');
     }
 }
 

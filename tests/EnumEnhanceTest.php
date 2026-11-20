@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace youvision\store\admin\tests;
 
 use PHPUnit\Framework\TestCase;
-use youvision\store\admin\support\enum\EnumEnhance;
+use youvision\store\admin\support\enums\EnumEnhance;
 
 enum EnumEnhanceTestStatus: int
 {

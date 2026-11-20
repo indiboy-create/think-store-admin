@@ -6,7 +6,7 @@ namespace youvision\store\admin\controller;
 
 use think\Response;
 
-class Index extends Controller
+class Dashboard extends Controller
 {
     public function index(): Response
     {

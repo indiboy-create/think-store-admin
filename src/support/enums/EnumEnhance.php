@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace youvision\store\admin\support\enum;
+namespace youvision\store\admin\support\enums;
 
 use think\facade\Lang;
 
